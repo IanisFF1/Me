@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Password Generator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css" 
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw==" 
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+</head>
+<body>
+
+    <button id="enter-save-container" title="Save to Vault"><i class="fa-solid fa-plus" id="enter-save-container-icon"></i></button>
+    <button id="enter-list-container" title="View passwords stored in Vault"><i class="fa-solid fa-vault"></i></button>
+    <div class="container">
+        <h1>Password Generator</h1>
+        
+        <!-- password container -->
+        <div class="password-container">
+            <input type="text" readonly id="password">
+            <i class="far fa-copy" id="copy-btn" title="Copy to Clipboard"></i>
+        </div>
+
+        <!-- options -->
+         <div class="options">
+            <!-- password lenght -->
+             <div class="option">
+                <label for="length">Password Length</label>
+                <div class="range-container">
+                    <input type="range" id="length" min="6" max="24" value="12">
+                    <span id="length-value">12</span>
+                </div>
+             </div>
+             <!-- include uppercase option -->
+              <div class="option">
+                <label for="uppercase">Include Uppercase</label>
+                <input type="checkbox" id="uppercase" checked>
+              </div>
+             <!-- include lowercase option -->
+              <div class="option">
+                <label for="lowercase">Include Lowercase</label>
+                <input type="checkbox" id="lowercase" checked>
+              </div>
+             <!-- include numbers option -->
+              <div class="option">
+                <label for="numbers">Include Numbers</label>
+                <input type="checkbox" id="numbers" checked>
+              </div>
+             <!-- include symbols option -->
+              <div class="option">
+                <label for="symbols">Include Symbols</label>
+                <input type="checkbox" id="symbols" checked>
+              </div>
+         </div>
+
+
+         <!-- generate password button -->
+         <button id="generate-btn">
+            <i class="fas fa-key"></i>
+            Generate Password
+         </button>
+
+         <!-- strength meter -->
+         <div class="strength-container">
+            <p>Password Strength: <span id="strength-label">Medium</span></p>
+            <div class="strength-meter">
+                <div class="strength-bar"></div>
+            </div>
+         </div>
+
+    </div>
+
+    <!-- popup in case of no characters selected -->
+    <div class="popup-no-chars">
+        <p>Please select at least one character type!</p>
+    </div>
+
+    <!-- form for saving a password -->
+    <div class="save-container">
+        <i class="fa-solid fa-x" id="exit-save-container"></i>
+        <h1 class="save-title">Password Saver</h1>
+        <label for="site-name">Site name</label>
+        <input type="text" id="site-name">
+        <label for="encrypted-password">Your encrypted password</label>
+        <div class="save-password-container">
+            <input type="password" id="encrypted-password">
+            <button id="visible"><i class="fa-solid fa-eye"></i></button>
+        </div>
+        <label for="master-key" id="master-key-label">Master Access Key</label>
+        <input type="text" id="master-key">
+        <div class="confirm-master-container">
+            <label for="confirm-master" id="confirm-label">Confirm Key</label>
+            <input type="text" id="confirm-master">
+        </div>
+        <div class="save-checkbox-container">
+            <label for="session-save">Remember key for this session</label>
+            <input type="checkbox" id="session-save">
+        </div>
+        
+        <button id="save-btn">Save</button>
+        
+    </div>
+
+    <div class="password-list-container">
+        <i class="fa-solid fa-x" id="exit-list-container"></i>
+        <h1 class="vault-title">Password Vault</h1>
+
+        <div class="auth-screen">
+            <label for="key-for-list">Enter key to see your passwords</label>
+            <input type="text" id="key-for-list">
+            <div class="save-checkbox-container">
+                <label for="list-show">Remember key for this session</label>
+                <input type="checkbox" id="list-show">
+            </div>
+            <button id="enter-btn">Enter</button>
+        </div>
+        <div class="list-screen">
+            
+        </div>
+    </div>
+
+    
+    <div class="modal-content">
+        <h3>Delete Password?</h3>
+        <p>Are you sure you want to remove the credentials for <span id="modal-site-name"></span>?</p>
+        <div class="modal-actions">
+            <button id="cancel-delete" class="btn-secondary">Cancel</button>
+            <button id="confirm-delete" class="btn-danger">Delete</button>
+        </div>
+    </div>
+
+    
+    <script src="script.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+</body>
+</html>
