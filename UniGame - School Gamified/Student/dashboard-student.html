@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Dashboard - Gamification</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo-area">
+            <h2>UniGame</h2>
+        </div>
+        
+        <ul class="nav-links">
+            <li class="active"><a href="index.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="insigne.html"><i class="fa-solid fa-medal"></i> Insigne</a></li>
+            <li><a href="magazin.html"><i class="fa-solid fa-store"></i> Magazin</a></li>
+            <li><a href="profil.html"><i class="fa-solid fa-user"></i> Profilul Meu</a></li>
+        </ul>
+        <div class="nav-right">
+            <div class="user-balance-display">
+                <i class="fa-solid fa-coins"></i>
+                <span id="nav-balance">1250</span> MP
+            </div>
+            <div id="notification-container" style="display: flex; gap: 20px; align-items: center;"></div>
+        </div>
+
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <h1>Salut, Andrei!</h1>
+            <p>Iată situația ta academică la zi.</p>
+        </header>
+
+        <div class="dashboard-grid">
+            
+            <div class="card progress-card">
+                <h3>Progresul Cursului</h3>
+                <div class="progress-info">
+                    <span class="big-number">8/20</span>
+                    <span>insigne obținute</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-fill" style="width: 40%;"></div>
+                </div>
+                <p class="small-text">Continuă așa! Ești pe drumul cel bun.</p>
+            </div>
+
+            <div class="card balance-card">
+                <h3>Balanța ta</h3>
+                <div class="balance-info">
+                    <i class="fa-solid fa-coins coin-icon"></i>
+                    <span class="big-number">1250</span>
+                    <span>MeritPoints</span>
+                </div>
+                <a href="magazin.html" class="btn-primary" style="text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    Mergi la Magazin <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+
+            <div class="card comparison-card">
+                <div class="card-header-tabs">
+                    <h3>Status vs. Clasă</h3>
+                    <div class="tabs">
+                        <button class="tab-btn active" id="tab-points">Puncte</button>
+                        <button class="tab-btn" id="tab-badges">Insigne</button>
+                    </div>
+                </div>
+                
+                <div class="chart-area" id="comparison-chart">
+                    <div class="bar-group">
+                        <div class="bar-label" id="label-user">Eu (Top 20%)</div>
+                        <div class="bar-track">
+                            <div class="bar-value user-bar" id="bar-user" style="width: 80%;">1250 MP</div>
+                        </div>
+                    </div>
+                    <div class="bar-group">
+                        <div class="bar-label" id="label-class">Media Clasei</div>
+                        <div class="bar-track">
+                            <div class="bar-value class-bar" id="bar-class" style="width: 60%;">980 MP</div>
+                        </div>
+                    </div>
+                    <p class="feedback-text" id="feedback-text">Felicitări! Ești peste media clasei.</p>
+                </div>
+            </div>
+
+            <div class="card notifications-card">
+                <h3>Anunțuri Recente</h3>
+                <ul class="notification-list">
+                    <li class="notif-item rejected">
+                        <i class="fa-solid fa-circle-xmark text-danger"></i>
+                        <div class="notif-content">
+                            <strong>Cerere respinsă</strong>
+                            <p>Prof. Popescu nu ți-a putut valida insigna "Voluntar".</p>
+                        </div>
+                    </li>
+                    <li class="notif-item success">
+                        <i class="fa-solid fa-circle-check text-success"></i>
+                        <div class="notif-content">
+                            <strong>Insignă Deblocată!</strong>
+                            <p>Ai primit insigna "SQL Basic".</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/dashboard.js"></script>
+    <script src="../js/navbar.js"></script>
+</body>
+</html>

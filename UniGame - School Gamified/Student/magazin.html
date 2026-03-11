@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Magazin - UniGame</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/magazin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo-area">
+            <h2>UniGame</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="dashboard-student.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="insigne.html"><i class="fa-solid fa-medal"></i> Insigne</a></li>
+            <li class="active"><a href="magazin.html"><i class="fa-solid fa-store"></i> Magazin</a></li>
+            <li><a href="profil.html"><i class="fa-solid fa-user"></i> Profilul Meu</a></li>
+        </ul>
+        <div class="nav-right">
+            <div class="user-balance-display">
+                <i class="fa-solid fa-coins"></i>
+                <span id="nav-balance">1250</span> MP
+            </div>
+            <div id="notification-container" style="display: flex; gap: 20px; align-items: center;"></div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header shop-header">
+            <div>
+                <h1>Magazin Recompense</h1>
+                <p>Folosește MeritPoints pentru a cumpăra avantaje academice.</p>
+            </div>
+            <div class="balance-card-small">
+                <span>Sold Disponibil:</span>
+                <h2 id="page-balance">1250 MP</h2>
+            </div>
+        </header>
+
+        <div class="shop-grid">
+            <div class="shop-item">
+                <div class="item-icon-wrapper color-blue">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+                <div class="item-content">
+                    <h3>Pass Amânare 24h</h3>
+                    <p>Prelungește deadline-ul unei teme cu o zi fără penalizări.</p>
+                    <div class="item-meta">
+                        <span class="stock">Stoc: 5/100</span>
+                        <span class="limit">Limită: 2/student</span>
+                    </div>
+                </div>
+                <div class="item-action">
+                    <span class="price">500 MP</span>
+                    <button class="btn-primary btn-buy" data-price="500" data-name="Pass Amânare 24h">Cumpără</button>
+                </div>
+            </div>
+
+            <div class="shop-item">
+                <div class="item-icon-wrapper color-purple">
+                    <i class="fa-solid fa-user-secret"></i>
+                </div>
+                <div class="item-content">
+                    <h3>Proiect Anonim</h3>
+                    <p>Predă un proiect anonim pentru evaluare imparțială.</p>
+                    <div class="item-meta">
+                        <span class="stock">Stoc: 20</span>
+                    </div>
+                </div>
+                <div class="item-action">
+                    <span class="price">450 MP</span>
+                    <button class="btn-primary btn-buy" data-price="450" data-name="Proiect Anonim">Cumpără</button>
+                </div>
+            </div>
+
+            <div class="shop-item">
+                <div class="item-icon-wrapper color-green">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                </div>
+                <div class="item-content">
+                    <h3>Sesiune Mentorat</h3>
+                    <p>30 de minute de mentorat 1-la-1 cu profesorul.</p>
+                    <div class="item-meta">
+                        <span class="stock">Stoc: 2</span>
+                    </div>
+                </div>
+                <div class="item-action">
+                    <span class="price">800 MP</span>
+                    <button class="btn-primary btn-buy" data-price="800" data-name="Sesiune Mentorat">Cumpără</button>
+                </div>
+            </div>
+
+            <div class="shop-item">
+                <div class="item-icon-wrapper color-orange">
+                    <i class="fa-solid fa-pizza-slice"></i>
+                </div>
+                <div class="item-content">
+                    <h3>Voucher Cantină</h3>
+                    <p>O masă gratuită la cantina universității.</p>
+                    <div class="item-meta">
+                        <span class="stock">Stoc: 50</span>
+                    </div>
+                </div>
+                <div class="item-action">
+                    <span class="price">250 MP</span>
+                    <button class="btn-primary btn-buy" data-price="250" data-name="Voucher Cantină">Cumpără</button>
+                </div>
+            </div>
+
+            <div class="shop-item out-of-stock">
+                <div class="item-icon-wrapper color-red">
+                    <i class="fa-solid fa-ticket"></i>
+                </div>
+                <div class="item-content">
+                    <h3>Bilet Conferință IT</h3>
+                    <p>Acces gratuit la conferința locală de tehnologie.</p>
+                    <div class="item-meta">
+                        <span class="stock stock-zero">Stoc: 0/10</span>
+                    </div>
+                </div>
+                <div class="item-action">
+                    <span class="price">1000 MP</span>
+                    <button class="btn-disabled" disabled>Stoc Epuizat</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="../js/magazin.js"></script>
+    <script src="../js/navbar.js"></script>
+
+</body>
+</html>

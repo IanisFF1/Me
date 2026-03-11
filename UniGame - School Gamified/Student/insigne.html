@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Insigne - UniGame</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/insigne.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo-area">
+            <h2>UniGame</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="dashboard-student.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+            <li class="active"><a href="insigne.html"><i class="fa-solid fa-medal"></i> Insigne</a></li>
+            <li><a href="magazin.html"><i class="fa-solid fa-store"></i> Magazin</a></li>
+            <li><a href="profil.html"><i class="fa-solid fa-user"></i> Profilul Meu</a></li>
+        </ul>
+
+        <div class="nav-right">
+            <div class="user-balance-display">
+                <i class="fa-solid fa-coins"></i>
+                <span id="nav-balance">1250</span> MP
+            </div>
+            <div id="notification-container" style="display: flex; gap: 20px; align-items: center;"></div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <h1>Portofoliu Insigne</h1>
+            <p>Colectează insigne pentru a debloca titluri legendare și puncte bonus.</p>
+        </header>
+
+        <section class="meta-section">
+            <h3 class="section-title">Progres către "Maestru Front-End"</h3>
+            <div class="meta-container" id="meta-container">
+                <div class="meta-progress-wrapper">
+                    <div class="meta-badges-group">
+                        <div class="badge-small obtained">
+                            <i class="fa-brands fa-html5"></i>
+                            <span>HTML</span>
+                        </div>
+                        <div class="badge-small obtained">
+                            <i class="fa-brands fa-css3-alt"></i>
+                            <span>CSS</span>
+                        </div>
+                        <div class="badge-small obtained highlight-pulse">
+                            <i class="fa-brands fa-js"></i>
+                            <span>JS Advanced</span>
+                        </div>
+                    </div>
+                    <div class="arrow-separator">
+                        <i class="fa-solid fa-arrow-right"></i>
+                    </div>
+                    <div class="meta-target locked" id="target-badge">
+                        <div class="badge-icon-large">
+                            <i class="fa-solid fa-laptop-code"></i>
+                        </div>
+                        <h4>Maestru Front-End</h4>
+                        <p>Reward: 100 MP</p>
+                        <button class="btn-primary" id="btn-combine">Combină Insignele!</button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <h3 class="section-title">Toate Insignele</h3>
+        <div class="badges-grid">
+            
+            <div class="badge-card obtained">
+                <div class="badge-icon">
+                    <i class="fa-solid fa-database"></i>
+                </div>
+                <h4>SQL Basic</h4>
+                <p class="badge-desc">Ai creat primele tale tabele relaționale.</p>
+                <span class="badge-status"><i class="fa-solid fa-check"></i> Obținută</span>
+            </div>
+
+            <div class="badge-card obtained">
+                <div class="badge-icon">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <h4>Spirit de Echipă</h4>
+                <p class="badge-desc">Nominalizat de colegi la proiectul de grup.</p>
+                <span class="badge-status"><i class="fa-solid fa-check"></i> Obținută</span>
+            </div>
+
+            <div class="badge-card in-progress" id="card-backend">
+                <div class="view-summary">
+                    <div class="badge-icon">
+                        <i class="fa-solid fa-server"></i>
+                    </div>
+                    <h4>Back-End Hero</h4>
+                    <p class="badge-desc">Creează un API funcțional în Node.js.</p>
+                    <span class="badge-status"><i class="fa-solid fa-spinner"></i> În Progres</span>
+                    <button class="btn-outline btn-details" style="margin-top: 15px;">Vezi Detalii</button>
+                </div>
+
+                <div class="view-details hidden">
+                    <h4>Pași de urmat:</h4>
+                    <ul class="steps-list">
+                        <li class="done"><i class="fa-solid fa-check-circle"></i> Configurare Mediu</li>
+                        <li class="done"><i class="fa-solid fa-check-circle"></i> Baza de date</li>
+                        <li><i class="fa-regular fa-circle"></i> Rute API (GET/POST)</li>
+                        <li><i class="fa-regular fa-circle"></i> Autentificare JWT</li>
+                    </ul>
+                    <button class="btn-outline btn-back">Înapoi</button>
+                </div>
+            </div>
+
+            <div class="badge-card locked">
+                <div class="badge-icon">
+                    <i class="fa-solid fa-bug"></i>
+                </div>
+                <h4>Bug Hunter</h4>
+                <p class="badge-desc">Găsește și repară 5 erori în codul colegilor.</p>
+                <span class="badge-status"><i class="fa-solid fa-lock"></i> Blocată</span>
+            </div>
+
+            <div class="badge-card claimable" id="card-volunteer">
+                <div class="badge-icon">
+                    <i class="fa-solid fa-hand-holding-heart"></i>
+                </div>
+                <h4>Voluntar</h4>
+                <p class="badge-desc">Participă la o activitate de voluntariat.</p>
+                <button class="btn-outline" id="btn-claim-volunteer">Revendică (+50 MP)</button>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="animation-overlay" class="animation-overlay hidden">
+        <button id="btn-skip" class="btn-skip">Skip Animation <i class="fa-solid fa-forward"></i></button>
+        <div class="animation-stage">
+            </div>
+        <div id="reward-message" class="reward-message hidden">
+            <h2>Felicitări!</h2>
+            <p>Ai deblocat "Maestru Front-End"</p>
+            <div class="coin-reward">+100 MeritPoints</div>
+            <button class="btn-primary" id="btn-collect">Colectează</button>
+        </div>
+    </div>
+
+    <script src="../js/insigne.js"></script>
+    <script src="../js/navbar.js"></script>
+
+</body>
+</html>

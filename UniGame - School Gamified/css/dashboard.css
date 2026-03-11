@@ -1,0 +1,227 @@
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+.progress-info {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.big-number {
+    font-size: 32px;
+    font-weight: bold;
+    color: #2c3e50;
+}
+
+.progress-bar-container {
+    background-color: #eee;
+    height: 10px;
+    border-radius: 5px;
+    overflow: hidden;
+    margin-bottom: 10px;
+}
+
+.progress-fill {
+    background-color: #3498db;
+    height: 100%;
+    border-radius: 5px;
+}
+
+.small-text {
+    font-size: 14px;
+    color: #7f8c8d;
+}
+
+.balance-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.coin-icon {
+    color: #f39c12;
+    font-size: 24px;
+}
+
+.btn-primary {
+    width: 100%;
+}
+
+.card-header-tabs {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.tabs {
+    background: #eee;
+    border-radius: 20px;
+    padding: 2px;
+    display: flex;
+}
+
+.tab-btn {
+    border: none;
+    background: transparent;
+    padding: 5px 15px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 12px;
+    color: #7f8c8d;
+}
+
+.tab-btn.active {
+    background: white;
+    color: #2c3e50;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.bar-group {
+    margin-bottom: 10px;
+}
+
+.bar-label {
+    font-size: 12px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+.bar-track {
+    background: #f0f0f0;
+    height: 25px;
+    border-radius: 4px;
+    position: relative;
+}
+
+.bar-value {
+    height: 100%;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+    padding-left: 10px;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+.user-bar {
+    background-color: #27ae60;
+}
+
+.class-bar {
+    background-color: #7f8c8d;
+}
+
+.feedback-text {
+    font-size: 13px;
+    color: #7f8c8d;
+    font-style: italic;
+    margin-top: 10px;
+}
+
+.notification-list {
+    list-style: none;
+}
+
+.notif-item {
+    display: flex;
+    gap: 15px;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
+    border-bottom: 1px solid #eee;
+}
+
+.notif-item:last-child {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 0;
+}
+
+.notif-content strong {
+    display: block;
+    font-size: 14px;
+    margin-bottom: 3px;
+}
+
+.notif-content p {
+    font-size: 13px;
+    color: #7f8c8d;
+    line-height: 1.4;
+}
+
+.text-danger { color: #e74c3c; }
+.text-success { color: #27ae60; }
+
+.details-link {
+    font-size: 12px;
+    color: #3498db;
+    text-decoration: none;
+}
+
+.badge-mini {
+    background: #e74c3c;
+    color: white;
+    font-size: 10px;
+    padding: 2px 5px;
+    border-radius: 4px;
+    margin-left: 5px;
+}
+
+.welcome-section {
+    background: linear-gradient(135deg, #2c3e50 0%, #4a69bd 100%);
+    color: white;
+    padding: 30px;
+    border-radius: 12px;
+    margin-bottom: 30px;
+}
+
+.stats-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+    padding: 0 10px;
+}
+
+.stat-box {
+    text-align: center;
+}
+
+.stat-box .big-number {
+    display: block;
+    font-size: 28px;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.btn-small {
+    padding: 6px 12px;
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: white;
+    transition: opacity 0.2s;
+}
+
+.btn-approve {
+    background-color: #27ae60;
+}
+
+.btn-reject {
+    background-color: #e74c3c;
+}
+
+.btn-small:hover {
+    opacity: 0.9;
+}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profilul Meu - UniGame</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/profil.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="logo-area">
+            <h2>UniGame</h2>
+        </div>
+        <ul class="nav-links">
+            <li><a href="dashboard-student.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a></li>
+            <li><a href="insigne.html"><i class="fa-solid fa-medal"></i> Insigne</a></li>
+            <li><a href="magazin.html"><i class="fa-solid fa-store"></i> Magazin</a></li>
+            <li class="active"><a href="profil.html"><i class="fa-solid fa-user"></i> Profilul Meu</a></li>
+        </ul>
+        <div class="nav-right">
+            <div class="user-balance-display">
+                <i class="fa-solid fa-coins"></i>
+                <span id="nav-balance">1250</span> MP
+            </div>
+            <div id="notification-container" style="display: flex; gap: 20px; align-items: center;"></div>
+        </div>
+
+    </nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <h1>Profilul Meu</h1>
+            <p>Gestionează portofoliul și interacțiunile cu echipa.</p>
+        </header>
+
+        <section class="team-section">
+            <div class="section-header-row">
+                <h3>Proiect Activ: "Dezvoltare Web"</h3>
+                <span class="team-badge">Grupa 101, Echipa 4</span>
+            </div>
+
+            <div class="team-grid">
+                <div class="team-card self">
+                    <div class="avatar-large">A</div>
+                    <div class="member-info">
+                        <h4>Andrei Popescu (Eu)</h4>
+                        <p>Rol: Front-End Developer</p>
+                    </div>
+                </div>
+
+                <div class="team-card">
+                    <div class="avatar-large" style="background: #9b59b6;">I</div>
+                    <div class="member-info">
+                        <h4>Ioana Radu</h4>
+                        <p>Rol: UI/UX Designer</p>
+                    </div>
+                    <button class="btn-primary btn-nominate" data-name="Ioana Radu">
+                        <i class="fa-solid fa-award"></i> Nominalizează
+                    </button>
+                </div>
+
+                <div class="team-card">
+                    <div class="avatar-large" style="background: #34495e;">M</div>
+                    <div class="member-info">
+                        <h4>Mihai Ionescu</h4>
+                        <p>Rol: Back-End Developer</p>
+                    </div>
+                    <button class="btn-primary btn-nominate" data-name="Mihai Ionescu">
+                        <i class="fa-solid fa-award"></i> Nominalizează
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <section class="portfolio-section">
+            <div class="section-header-row">
+                <h3>Portofoliu Digital</h3>
+            </div>
+            
+            <div class="card portfolio-card">
+                <div id="portfolio-initial">
+                    <div class="portfolio-icon">
+                        <i class="fa-solid fa-briefcase"></i>
+                    </div>
+                    <h4>Încă nu ai un link public activ</h4>
+                    <p>Generează un link securizat cu insignele tale verificate (SQL, Java, Teamwork) pentru a-l atașa la CV sau LinkedIn.</p>
+                    <button class="btn-primary" id="btn-generate-link">Generează Link Public</button>
+                </div>
+
+                <div id="portfolio-active" class="hidden">
+                    <div class="success-icon-wrapper">
+                        <i class="fa-solid fa-check-circle"></i>
+                    </div>
+                    <h4>Portofoliul tău este activ!</h4>
+                    <p>Link-ul este valabil 30 de zile.</p>
+                    
+                    <div class="link-box">
+                        <input type="text" value="app.unigame.ro/p/andrei-popescu-x9z2" readonly id="portfolio-url">
+                        <button class="btn-copy" id="btn-copy-link">
+                            <i class="fa-regular fa-copy"></i> Copiază
+                        </button>
+                    </div>
+
+                    <button class="btn-outline btn-revoke" id="btn-revoke-link">Dezactivează Link-ul</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <div id="nomination-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Nominalizează Coleg</h3>
+                <button id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <p>Pentru: <strong id="nominee-name">Nume Coleg</strong></p>
+            
+            <div class="form-group">
+                <label>Alege Insigna:</label>
+                <div class="badge-selector">
+                    <div class="badge-option selected" data-value="Spirit de Echipă">
+                        <i class="fa-solid fa-users"></i> Spirit de Echipă
+                    </div>
+                    <div class="badge-option" data-value="Lider">
+                        <i class="fa-solid fa-chess-king"></i> Lider
+                    </div>
+                    <div class="badge-option" data-value="Altruist">
+                        <i class="fa-solid fa-hand-holding-heart"></i> Altruist
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Justificare (min. 20 caractere):</label>
+                <textarea id="nomination-reason" placeholder="Ex: M-a ajutat să rezolv bug-urile la baza de date..."></textarea>
+                <p class="error-text hidden" id="text-error">Te rugăm să detaliezi motivul (minim 20 caractere).</p>
+            </div>
+
+            <button class="btn-primary" id="submit-nomination">Trimite Nominalizarea</button>
+        </div>
+    </div>
+
+    <script src="../js/profil.js"></script>
+    <script src="../js/navbar.js"></script>
+
+</body>
+</html>

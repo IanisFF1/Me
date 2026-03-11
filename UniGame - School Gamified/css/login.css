@@ -1,0 +1,120 @@
+    body {
+        padding-top: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #2c3e50;
+        background: linear-gradient(135deg, #2c3e50 0%, #3498db 100%);
+    }
+
+    .login-container {
+        background: white;
+        width: 100%;
+        max-width: 400px;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+    }
+
+    .login-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+
+    .login-header h2 {
+        font-size: 32px;
+        color: #2c3e50;
+        margin-bottom: 5px;
+    }
+
+    .login-header p {
+        color: #7f8c8d;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #333;
+        font-size: 14px;
+    }
+
+    .input-wrapper {
+        position: relative;
+    }
+
+    .input-wrapper i {
+        position: absolute;
+        left: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+        color: #95a5a6;
+    }
+
+    .input-wrapper input {
+        width: 100%;
+        padding: 12px 15px 12px 40px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        font-size: 14px;
+        outline: none;
+        transition: border-color 0.3s;
+    }
+
+    .input-wrapper input:focus {
+        border-color: #3498db;
+    }
+
+    .input-wrapper input.input-error {
+        border-color: #e74c3c;
+        background-color: #fff5f5;
+    }
+
+    .error-text {
+        color: #e74c3c;
+        font-size: 12px;
+        margin-top: 5px;
+        display: block;
+    }
+
+    .form-message {
+        background-color: #fee2e2;
+        color: #c0392b;
+        padding: 10px;
+        border-radius: 6px;
+        font-size: 13px;
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border: 1px solid #f5c6cb;
+    }
+
+    .hidden {
+        display: none !important;
+    }
+
+    .btn-login {
+        width: 100%;
+        padding: 12px;
+        font-size: 16px;
+        margin-top: 10px;
+    }
+
+    .login-footer {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 13px;
+        color: #7f8c8d;
+    }
+
+    .login-footer a {
+        color: #3498db;
+        text-decoration: none;
+    }

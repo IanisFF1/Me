@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Profesor - UniGame</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/dashboard.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav id="navbar-container"></nav>
+
+    <main class="main-content">
+        <div class="welcome-section">
+            <h1>Bine ați revenit, Domnule Profesor!</h1>
+            <p id="welcome-msg">Aveți o cerere în așteptare.</p>
+        </div>
+
+        <div class="dashboard-grid">
+            <div class="card">
+                <h3>Studenți Activi pe Platformă</h3>
+                <div class="progress-info">
+                    <span class="big-number">9/10</span>
+                    <span>conectați azi</span>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-fill" style="width: 90%;"></div>
+                </div>
+                <p class="small-text">Rată de participare ridicată săptămâna aceasta.</p>
+            </div>
+
+            <div class="card">
+                <h3>Performanța Clasei</h3>
+                <div class="stats-container">
+                    <div class="stat-box">
+                        <span class="big-number" style="color: #f39c12;">958</span>
+                        <span class="small-text">Media MP</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="big-number" style="color: #3498db;">8.7</span>
+                        <span class="small-text">Media Insigne</span>
+                    </div>
+                </div>
+                <button class="btn-primary" id="btn-view-stats">Vezi Statistici Detaliate</button>
+            </div>
+
+            <div class="card">
+                <h3>Cereri în Așteptare</h3>
+                <ul class="notification-list">
+                    <li class="notif-item" id="request-item">
+                        <i class="fa-solid fa-user-clock" style="color: #3498db; font-size: 24px;"></i>
+                        <div class="notif-content" id="request-content">
+                            <strong>Andrei Popescu</strong>
+                            <p>Solicită insigna "Voluntar".</p>
+                            <p class="small-text" style="font-style:italic;">"Am participat la activitatea..."</p>
+                            <div class="action-buttons">
+                                <button class="btn-small btn-approve" id="btn-approve"><i class="fa-solid fa-check"></i> Validează</button>
+                                <button class="btn-small btn-reject" id="btn-reject"><i class="fa-solid fa-xmark"></i> Respinge</button>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="card">
+                <h3>Anunțuri Recente</h3>
+                <ul class="notification-list">
+                    <li class="notif-item">
+                        <i class="fa-solid fa-circle-exclamation text-danger"></i>
+                        <div class="notif-content">
+                            <strong>Termen Limită Apropiat</strong>
+                            <p>Proiectul final se predă în 48 de ore.</p>
+                        </div>
+                    </li>
+                    <li class="notif-item">
+                        <i class="fa-solid fa-wrench text-muted"></i>
+                        <div class="notif-content">
+                            <strong>Mentenanță Programată</strong>
+                            <p>Platforma va fi oprită sâmbătă, 02:00-04:00.</p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </main>
+
+    <script src="../js/navbar-profesor.js"></script>
+    <script src="../js/dashboard-profesor.js"></script>
+</body>
+</html>

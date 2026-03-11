@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Autentificare - UniGame</title>
+    <link rel="stylesheet" href="css/global.css">
+    <link rel="stylesheet" href="css/login.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <div class="login-container">
+        <div class="login-header">
+            <h2>UniGame</h2>
+            <p>Platformă de Gamification Universitar</p>
+        </div>
+
+        <form id="login-form">
+            <div class="form-group">
+                <label for="username">Utilizator</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-user"></i>
+                    <input type="text" id="username" placeholder="Introduceți utilizatorul">
+                </div>
+                <small class="error-text hidden" id="user-error">Minim 3 caractere.</small>
+            </div>
+
+            <div class="form-group">
+                <label for="password">Parolă</label>
+                <div class="input-wrapper">
+                    <i class="fa-solid fa-lock"></i>
+                    <input type="password" id="password" placeholder="Introduceți parola">
+                </div>
+                <small class="error-text hidden" id="pass-error">Min. 6 caractere, o literă și o cifră.</small>
+            </div>
+
+            <div class="form-message hidden" id="main-error">
+                <i class="fa-solid fa-circle-exclamation"></i> Date de autentificare invalide.
+            </div>
+
+            <button type="submit" class="btn-primary btn-login">Autentificare</button>
+        </form>
+
+        <div class="login-footer">
+            <p>Ai uitat parola? Contactează profesorul de curs pentru a o reseta.</p>
+        </div>
+    </div>
+
+    <script src="js/login.js"></script>
+</body>
+</html>

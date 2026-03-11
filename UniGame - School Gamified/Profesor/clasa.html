@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Clasa Mea - UniGame</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/clasa.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav id="navbar-container"></nav>
+
+    <main class="main-content">
+        <header class="page-header">
+            <h1>Clasa Mea</h1>
+            <p>Dezvoltare Web - Grupa 101</p>
+        </header>
+
+        <section class="stats-overview">
+            <div class="stat-card">
+                <div class="stat-icon bg-blue">
+                    <i class="fa-solid fa-users"></i>
+                </div>
+                <div class="stat-details">
+                    <h3 id="total-students">0</h3>
+                    <p>Studenți Înscriși</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon bg-orange">
+                    <i class="fa-solid fa-coins"></i>
+                </div>
+                <div class="stat-details">
+                    <h3 id="avg-mp">0</h3>
+                    <p>Media MP / Student</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon bg-purple">
+                    <i class="fa-solid fa-medal"></i>
+                </div>
+                <div class="stat-details">
+                    <h3 id="avg-badges">0</h3>
+                    <p>Media Insigne</p>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon bg-green">
+                    <i class="fa-solid fa-trophy"></i>
+                </div>
+                <div class="stat-details">
+                    <h3 id="top-student-name">-</h3>
+                    <p>Cel mai activ</p>
+                </div>
+            </div>
+        </section>
+
+        <div class="controls-bar">
+            <h3>Lista Studenți</h3>
+            <div class="search-wrapper">
+                <i class="fa-solid fa-search"></i>
+                <input type="text" id="search-input" placeholder="Caută după nume...">
+            </div>
+        </div>
+
+        <div class="students-list">
+            <div class="list-header">
+                <span>#</span>
+                <span>Nume Student</span>
+                <span>Insigne</span>
+                <span>MeritPoints</span>
+                <span>Progres Activitate</span>
+                <span>Acțiuni</span>
+            </div>
+            
+            <div id="students-container">
+            </div>
+        </div>
+
+    </main>
+
+    <script src="../js/navbar-profesor.js"></script>
+    <script src="../js/clasa-profesor.js"></script>
+</body>
+</html>

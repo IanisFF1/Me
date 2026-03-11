@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ro">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestiune Magazin - Profesor</title>
+    <link rel="stylesheet" href="../css/global.css">
+    <link rel="stylesheet" href="../css/magazin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+
+    <nav id="navbar-container"></nav>
+
+    <main class="main-content">
+        <div class="page-actions">
+            <div>
+                <h1>Gestiune Magazin</h1>
+                <p>Adaugă sau modifică recompensele disponibile pentru studenți.</p>
+            </div>
+            <button class="btn-primary" id="btn-open-modal">
+                <i class="fa-solid fa-plus"></i> Adaugă Recompensă
+            </button>
+        </div>
+
+        <div class="shop-grid" id="shop-admin-grid">
+
+            <div class="shop-item" data-id="1">
+                <div class="item-icon-wrapper color-blue">
+                    <i class="fa-solid fa-hourglass-half"></i>
+                </div>
+                <div class="item-content">
+                    <h3>Pass Amânare 24h</h3>
+                    <p>Prelungește deadline-ul unei teme cu o zi fără penalizări.</p>
+                    <div class="item-meta">
+                        <span class="stock">Stoc: 5</span>
+                        <span class="limit">Limită: 2/std</span>
+                        <span class="price-tag">500 MP</span>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn-edit"><i class="fa-solid fa-pen"></i> Editează</button>
+                    <button class="btn-delete"><i class="fa-solid fa-trash"></i> Șterge</button>
+                </div>
+            </div>
+
+            <div class="shop-item" data-id="2">
+                <div class="item-icon-wrapper color-purple">
+                    <i class="fa-solid fa-user-secret"></i>
+                </div>
+                <div class="item-content">
+                    <h3>Proiect Anonim</h3>
+                    <p>Predă un proiect anonim pentru evaluare imparțială.</p>
+                    <div class="item-meta">
+                        <span class="stock">Stoc: 20</span>
+                        <span class="limit">Limită: -</span>
+                        <span class="price-tag">450 MP</span>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn-edit"><i class="fa-solid fa-pen"></i> Editează</button>
+                    <button class="btn-delete"><i class="fa-solid fa-trash"></i> Șterge</button>
+                </div>
+            </div>
+
+            <div class="shop-item" data-id="3">
+                <div class="item-icon-wrapper color-green">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                </div>
+                <div class="item-content">
+                    <h3>Sesiune Mentorat</h3>
+                    <p>30 de minute de mentorat 1-la-1 cu profesorul.</p>
+                    <div class="item-meta">
+                        <span class="stock">Stoc: 2</span>
+                        <span class="limit">Limită: 1/std</span>
+                        <span class="price-tag">800 MP</span>
+                    </div>
+                </div>
+                <div class="admin-actions">
+                    <button class="btn-edit"><i class="fa-solid fa-pen"></i> Editează</button>
+                    <button class="btn-delete"><i class="fa-solid fa-trash"></i> Șterge</button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <div id="reward-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Configurare Recompensă</h3>
+                <button id="close-modal"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            
+            <form id="reward-form">
+                <input type="hidden" id="edit-mode-id">
+
+                <div class="form-row">
+                    <label>Nume Recompensă</label>
+                    <input type="text" id="reward-name" required>
+                </div>
+
+                <div class="form-row">
+                    <label>Descriere</label>
+                    <textarea id="reward-desc" rows="2" required></textarea>
+                </div>
+
+                <div class="row-split">
+                    <div class="form-row">
+                        <label>Preț (MP)</label>
+                        <input type="number" id="reward-price" min="0" required>
+                    </div>
+                    <div class="form-row">
+                        <label>Stoc Inițial</label>
+                        <input type="number" id="reward-stock" min="0" required>
+                    </div>
+                </div>
+
+                <div class="row-split">
+                    <div class="form-row">
+                        <label>Limită / Student (0 = fără)</label>
+                        <input type="number" id="reward-limit" min="0" value="0">
+                    </div>
+                    <div class="form-row">
+                        <label>Iconiță</label>
+                        <div class="icon-selector-wrapper">
+                            <select id="reward-icon">
+                                <option value="fa-gift">Cadou</option>
+                                <option value="fa-hourglass-half">Timp</option>
+                                <option value="fa-user-secret">Anonim</option>
+                                <option value="fa-chalkboard-user">Mentorat</option>
+                                <option value="fa-pizza-slice">Mâncare</option>
+                                <option value="fa-ticket">Bilet</option>
+                            </select>
+                            <div class="preview-icon"><i class="fa-solid fa-gift" id="icon-preview"></i></div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary" style="width: 100%;" id="btn-save">Salvează Recompensa</button>
+            </form>
+        </div>
+    </div>
+
+    <script src="../js/navbar-profesor.js"></script>
+    <script src="../js/magazin-profesor.js"></script>
+</body>
+</html>
