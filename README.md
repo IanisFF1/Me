@@ -1,1 +1,1 @@
-This repository contains all the projects I did in college and my personal ones.
+This repository contains all my personal projects and the ones I did in college.
