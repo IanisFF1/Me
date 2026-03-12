@@ -18,11 +18,9 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        // 1. Cautam userul in baza de date
         UserCredential user = userCredentialRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User Not Found with username: " + username));
 
-        // 2. Il convertim in UserDetailsImpl (ceea ce intelege Security)
         return UserDetailsImpl.build(user);
     }
 }

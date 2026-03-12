@@ -48,21 +48,16 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
             if (jwtUtil.validateToken(jwt)) {
 
-                // 1. Extragem rolurile "brute" (care pot fi String sau LinkedHashMap)
                 List<?> rawRoles = jwtUtil.extractRoles(jwt);
 
-                // 2. Le convertim cu atentie
                 List<SimpleGrantedAuthority> authorities = rawRoles.stream()
                         .map(role -> {
-                            // Cazul 1: Rolul e deja String ("CLIENT")
                             if (role instanceof String) {
                                 return new SimpleGrantedAuthority((String) role);
                             }
-                            // Cazul 2: Rolul e un Obiect ({authority=CLIENT}) - Cazul tau actual
                             else if (role instanceof java.util.Map) {
                                 return new SimpleGrantedAuthority((String) ((java.util.Map) role).get("authority"));
                             }
-                            // Fallback
                             else {
                                 return new SimpleGrantedAuthority(String.valueOf(role));
                             }

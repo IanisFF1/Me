@@ -37,7 +37,7 @@ public class DeviceController {
                 .path("/{id}")
                 .buildAndExpand(id)
                 .toUri();
-        return ResponseEntity.created(location).build(); // 201 + Location header
+        return ResponseEntity.created(location).build();
     }
 
     @GetMapping("/{id}")
@@ -54,12 +54,11 @@ public class DeviceController {
     @PutMapping("/{id}")
     public ResponseEntity<DeviceDetailsDTO> updateDevice(@PathVariable UUID id,
                                                          @Valid @RequestBody DeviceDetailsDTO deviceDetailsDTO) {
-        // Service-ul va arunca ResourceNotFoundException daca ID-ul nu exista
+
         DeviceDetailsDTO updatedDevice = deviceService.update(id, deviceDetailsDTO);
-        return ResponseEntity.ok(updatedDevice); // 200 OK
+        return ResponseEntity.ok(updatedDevice);
     }
 
-    // În DeviceController.java
 
     @PatchMapping("/{deviceId}/assign/{userId}")
     public ResponseEntity<Void> assignUser(@PathVariable UUID deviceId, @PathVariable UUID userId) {
@@ -69,12 +68,10 @@ public class DeviceController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteDevice(@PathVariable UUID id) {
-        // Service-ul va arunca ResourceNotFoundException daca ID-ul nu exista
         deviceService.delete(id);
-        return ResponseEntity.noContent().build(); // 204 No Content
+        return ResponseEntity.noContent().build();
     }
 
-    // In DeviceController.java
 
     @PatchMapping("/{deviceId}/unassign")
     public ResponseEntity<Void> unassignUser(@PathVariable UUID deviceId) {

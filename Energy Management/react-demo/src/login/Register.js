@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { Button, Container, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
+import { Button, Form, FormGroup, Input, Label, Alert, Card, CardBody } from 'reactstrap';
 import * as API_AUTH from './auth-api';
 
 function Register(props) {
     const [userData, setUserData] = useState({
         username: '',
         password: '',
-        role: 'CLIENT', // Default
+        role: 'CLIENT',
         name: '',
         age: '',
         address: '',
@@ -16,7 +16,7 @@ function Register(props) {
     const [error, setError] = useState(null);
     const [success, setSuccess] = useState(false);
 
-    const SECRET_ADMIN_KEY = "9456872638327465";
+    const SECRET_ADMIN_KEY = "30112003";
 
     const handleChange = (event) => {
         setUserData({
@@ -27,28 +27,17 @@ function Register(props) {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-
-        // 1. Facem o copie a datelor (ca sa nu modificam state-ul direct)
         let dataToSend = { ...userData };
-
-        // Convertim varsta in numar (backend-ul asteapta int)
         dataToSend.age = parseInt(userData.age);
 
-        // 2. VERIFICARE DE SECURITATE PENTRU ADMIN
         if (userData.role === 'ADMIN') {
             if (userData.adminKey !== SECRET_ADMIN_KEY) {
                 setError("Wrong code! Permission denied.");
-                return; // Oprim totul aici. Nu trimitem nimic la server.
+                return;
             }
         }
-
-        // 3. CURATENIE: Stergem campul adminKey din obiectul pe care il trimitem
-        // Backend-ul nu are acest camp in DTO si nu are nevoie de el.
         delete dataToSend.adminKey;
 
-        console.log("Date trimise catre server:", dataToSend);
-
-        // 4. Trimitem cererea
         API_AUTH.registerUser(dataToSend, (result, status, err) => {
             if (result !== null && (status === 200 || status === 201)) {
                 setSuccess(true);
@@ -58,7 +47,6 @@ function Register(props) {
                 }, 2000);
             } else {
                 setSuccess(false);
-                // Afisam eroarea venita din backend (cea cu JSON)
                 if (result && result.error) {
                     setError(result.error);
                 } else {
@@ -69,65 +57,72 @@ function Register(props) {
     };
 
     return (
-        <Container className="p-4" style={{ backgroundColor: '#fff', borderRadius: '10px' }}>
-            <h3 className="text-center mb-4">Register to new account</h3>
+        <Card className="shadow border-0" style={{width: '100%', maxWidth: '600px', borderRadius: '15px'}}>
+            <CardBody className="p-5">
+                <h3 className="text-center mb-4" style={{fontWeight: 'bold', color: '#333'}}>Create Account</h3>
 
-            {error && <Alert color="danger">{error}</Alert>}
-            {success && <Alert color="success">Account created successfully! Redirecting...</Alert>}
+                {error && <Alert color="danger">{error}</Alert>}
+                {success && <Alert color="success">Account created successfully! Redirecting...</Alert>}
 
-            <Form onSubmit={handleSubmit}>
-                <FormGroup>
-                    <Label>Username</Label>
-                    <Input name="username" placeholder="Choose a unique username" onChange={handleChange} required />
-                </FormGroup>
-                <FormGroup>
-                    <Label>Password</Label>
-                    <Input type="password" name="password" placeholder="Choose a password" onChange={handleChange} required />
-                </FormGroup>
-
-                {/* SELECTARE ROL */}
-                <FormGroup>
-                    <Label>Rol</Label>
-                    <Input type="select" name="role" value={userData.role} onChange={handleChange}>
-                        <option value="CLIENT">Client</option>
-                        <option value="ADMIN">Admin</option>
-                    </Input>
-                </FormGroup>
-
-                {/* CAMP COD SECRET (Apare doar daca e Admin) */}
-                {userData.role === 'ADMIN' && (
+                <Form onSubmit={handleSubmit}>
                     <FormGroup>
-                        <Label className="text-danger">Special Admin Code</Label>
-                        <Input
-                            type="password"
-                            name="adminKey"
-                            placeholder="Type in secret key"
-                            onChange={handleChange}
-                        />
+                        <Label className="fw-bold">Username</Label>
+                        <Input name="username" placeholder="Choose a unique username" onChange={handleChange} required />
                     </FormGroup>
-                )}
+                    <FormGroup>
+                        <Label className="fw-bold">Password</Label>
+                        <Input type="password" name="password" placeholder="Choose a password" onChange={handleChange} required />
+                    </FormGroup>
 
-                <hr />
-                <FormGroup>
-                    <Label>Full name</Label>
-                    <Input name="name" placeholder="Ex: Popescu Ion" onChange={handleChange} required />
-                </FormGroup>
-                <FormGroup>
-                    <Label>Age</Label>
-                    <Input type="number" name="age" placeholder="Ex: 25" onChange={handleChange} required />
-                </FormGroup>
-                <FormGroup>
-                    <Label>Address</Label>
-                    <Input name="address" placeholder="Ex: Str. Principala nr 1" onChange={handleChange} required />
-                </FormGroup>
+                    <FormGroup>
+                        <Label className="fw-bold">Role</Label>
+                        <Input type="select" name="role" value={userData.role} onChange={handleChange}>
+                            <option value="CLIENT">Client</option>
+                            <option value="ADMIN">Admin</option>
+                        </Input>
+                    </FormGroup>
 
-                <Button color="success" block style={{width: '100%'}}>Create account</Button>
+                    {userData.role === 'ADMIN' && (
+                        <FormGroup>
+                            <Label className="text-danger fw-bold">Special Admin Code</Label>
+                            <Input
+                                type="password"
+                                name="adminKey"
+                                placeholder="Type in secret key"
+                                onChange={handleChange}
+                            />
+                        </FormGroup>
+                    )}
 
-                <div className="text-center mt-3">
-                    <Button color="link" onClick={props.onGoToLogin}>You already have an account? Login</Button>
-                </div>
-            </Form>
-        </Container>
+                    <hr className="my-4"/>
+
+                    <FormGroup>
+                        <Label className="fw-bold">Full name</Label>
+                        <Input name="name" placeholder="Ex: Popescu Ion" onChange={handleChange} required />
+                    </FormGroup>
+                    <div style={{display: 'flex', gap: '15px'}}>
+                        <FormGroup style={{flex: 1}}>
+                            <Label className="fw-bold">Age</Label>
+                            <Input type="number" name="age" placeholder="Ex: 25" onChange={handleChange} required />
+                        </FormGroup>
+                        <FormGroup style={{flex: 2}}>
+                            <Label className="fw-bold">Address</Label>
+                            <Input name="address" placeholder="Ex: Str. Principala nr 1" onChange={handleChange} required />
+                        </FormGroup>
+                    </div>
+
+                    <Button color="success" block size="lg" className="mt-4" style={{borderRadius: '25px', width: '100%'}}>
+                        Create Account
+                    </Button>
+
+                    <div className="text-center mt-3">
+                        <Button color="link" onClick={props.onGoToLogin}>
+                            Already have an account? Login
+                        </Button>
+                    </div>
+                </Form>
+            </CardBody>
+        </Card>
     );
 }
 

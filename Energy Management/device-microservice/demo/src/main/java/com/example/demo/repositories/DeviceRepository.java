@@ -23,10 +23,8 @@ public interface DeviceRepository extends JpaRepository<Device, UUID> {
      * Example: Custom query
      */
 
-
-    // Aceasta este magia SQL: "Seteaza userId pe null unde userId este egal cu cel primit"
-    @Modifying      // Spune Spring-ului ca facem UPDATE/DELETE, nu SELECT
-    @Transactional  // Obligatoriu pentru operatii care modifica date
+    @Modifying
+    @Transactional
     @Query("UPDATE Device d SET d.userId = null WHERE d.userId = :userId")
     void detachDevicesFromUser(@Param("userId") UUID userId);
 }

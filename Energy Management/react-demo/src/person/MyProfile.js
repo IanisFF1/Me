@@ -11,14 +11,19 @@ function MyProfile() {
         role: ''
     });
 
-    // Username-ul il luam din sesiune (nu vine din User Service, ci din Auth)
     const username = sessionStorage.getItem("username");
     const currentUserId = sessionStorage.getItem("userId");
-
     const [isLoaded, setIsLoaded] = useState(false);
-    const [message, setMessage] = useState({ type: '', text: '' }); // Pentru succes/eroare
+    const [message, setMessage] = useState({ type: '', text: '' });
 
-    // 1. Incarcam datele de pe server cand intram pe pagina
+    const pageStyle = {
+        minHeight: '100vh',
+        backgroundColor: '#f4f7f6',
+        paddingTop: '50px',
+        paddingBottom: '50px'
+    };
+
+    // 1. Incarcam datele
     useEffect(() => {
         if (currentUserId) {
             API_USERS.getPersonById({ id: currentUserId }, (result, status, err) => {
@@ -38,12 +43,10 @@ function MyProfile() {
         }
     }, [currentUserId]);
 
-    // 2. Gestionam schimbarile in input-uri
     const handleChange = (e) => {
         setUserData({ ...userData, [e.target.name]: e.target.value });
     };
 
-    // 3. Salvam modificarile
     const handleSave = (e) => {
         e.preventDefault();
 
@@ -51,14 +54,12 @@ function MyProfile() {
             name: userData.name,
             age: parseInt(userData.age),
             address: userData.address,
-            role: userData.role // Trimitem rolul inapoi ca sa nu il pierdem, desi backend-ul nu ar trebui sa-l schimbe
+            role: userData.role
         };
 
         API_USERS.updatePerson(userData.id, dataToSend, (result, status, err) => {
             if (status === 200) {
                 setMessage({ type: 'success', text: 'Data updated successfully!' });
-
-                // Ascundem mesajul dupa 3 secunde
                 setTimeout(() => setMessage({ type: '', text: '' }), 3000);
             } else {
                 setMessage({ type: 'danger', text: 'Update error!' });
@@ -67,62 +68,71 @@ function MyProfile() {
     };
 
     return (
-        <Container className="mt-5">
-            <Row className="justify-content-center">
-                <Col md="8" lg="6">
-                    <Card className="shadow">
-                        <CardBody className="p-5">
-                            <h3 className="text-center mb-4">My Profile</h3>
+        <div style={pageStyle}>
+            <Container>
+                <Row className="justify-content-center">
+                    <Col md="8" lg="6">
+                        <Card className="shadow border-0" style={{borderRadius: '15px'}}>
+                            <CardBody className="p-5">
+                                <div className="text-center mb-4">
+                                    <h3 style={{fontWeight: 'bold', color: '#333'}}>My Profile</h3>
+                                    <p className="text-muted">Manage your personal information</p>
+                                </div>
 
-                            {message.text && <Alert color={message.type}>{message.text}</Alert>}
+                                {message.text && <Alert color={message.type}>{message.text}</Alert>}
 
-                            {isLoaded ? (
-                                <Form onSubmit={handleSave}>
-                                    {/* USERNAME (READ ONLY) */}
-                                    <FormGroup>
-                                        <Label className="text-muted">Username (Account)</Label>
-                                        <Input type="text" value={username || ''} disabled style={{backgroundColor: '#e9ecef'}} />
-                                        <small className="text-muted">Username cannot be changed.</small>
-                                    </FormGroup>
+                                {isLoaded ? (
+                                    <Form onSubmit={handleSave}>
+                                        <FormGroup>
+                                            <Label className="text-muted fw-bold" style={{fontSize: '0.9rem'}}>USERNAME</Label>
+                                            <Input
+                                                type="text"
+                                                value={username || ''}
+                                                disabled
+                                                style={{backgroundColor: '#f8f9fa', border: 'none', fontWeight: 'bold'}}
+                                            />
+                                        </FormGroup>
 
-                                    <hr />
+                                        <hr className="my-4" />
 
-                                    {/* DATE EDITABILE */}
-                                    <FormGroup>
-                                        <Label>Full name</Label>
-                                        <Input name="name" value={userData.name} onChange={handleChange} required />
-                                    </FormGroup>
+                                        <FormGroup>
+                                            <Label className="fw-bold">Full Name</Label>
+                                            <Input name="name" value={userData.name} onChange={handleChange} required />
+                                        </FormGroup>
 
-                                    <Row>
-                                        <Col md={4}>
-                                            <FormGroup>
-                                                <Label>Age</Label>
-                                                <Input type="number" name="age" value={userData.age} onChange={handleChange} required />
-                                            </FormGroup>
-                                        </Col>
-                                        <Col md={8}>
-                                            <FormGroup>
-                                                <Label>Role</Label>
-                                                <Input type="text" value={userData.role} disabled />
-                                            </FormGroup>
-                                        </Col>
-                                    </Row>
+                                        <Row>
+                                            <Col md={4}>
+                                                <FormGroup>
+                                                    <Label className="fw-bold">Age</Label>
+                                                    <Input type="number" name="age" value={userData.age} onChange={handleChange} required />
+                                                </FormGroup>
+                                            </Col>
+                                            <Col md={8}>
+                                                <FormGroup>
+                                                    <Label className="fw-bold">Role</Label>
+                                                    <Input type="text" value={userData.role} disabled style={{backgroundColor: '#e9ecef'}} />
+                                                </FormGroup>
+                                            </Col>
+                                        </Row>
 
-                                    <FormGroup>
-                                        <Label>Address</Label>
-                                        <Input type="textarea" name="address" value={userData.address} onChange={handleChange} required />
-                                    </FormGroup>
+                                        <FormGroup>
+                                            <Label className="fw-bold">Address</Label>
+                                            <Input type="textarea" name="address" value={userData.address} onChange={handleChange} required style={{minHeight: '100px'}} />
+                                        </FormGroup>
 
-                                    <Button color="primary" block className="mt-4" size="lg">Save changes</Button>
-                                </Form>
-                            ) : (
-                                <p className="text-center">Data is loading...</p>
-                            )}
-                        </CardBody>
-                    </Card>
-                </Col>
-            </Row>
-        </Container>
+                                        <Button color="primary" block className="mt-4 shadow-sm" size="lg" style={{borderRadius: '25px'}}>
+                                            Save Changes
+                                        </Button>
+                                    </Form>
+                                ) : (
+                                    <p className="text-center">Data is loading...</p>
+                                )}
+                            </CardBody>
+                        </Card>
+                    </Col>
+                </Row>
+            </Container>
+        </div>
     );
 }
 

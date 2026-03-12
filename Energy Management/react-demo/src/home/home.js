@@ -4,6 +4,8 @@ import {
     CardTitle, CardText, Input, Alert, Badge, Button
 } from 'reactstrap';
 import * as API_DEVICES from '../device/api/device-api';
+// --- IMPORT NOU ---
+import ChatWindow from "../chat/ChatWindow";
 
 const cardStyle = {
     textAlign: 'center',
@@ -13,24 +15,33 @@ const cardStyle = {
     height: '100%'
 };
 
+
+const ADMIN_ID = "8c80d7e0-ca30-484c-b1f4-193ca8c5891d";
+
 function Home() {
     const [devices, setDevices] = useState([]);
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
     const [searchTerm, setSearchTerm] = useState("");
 
+    const [isChatOpen, setIsChatOpen] = useState(false);
+
     const username = sessionStorage.getItem("username") || "User";
     const userId = sessionStorage.getItem("userId");
 
-    // --- 1. FETCH DATA & INIT STATUS ---
+    const pageStyle = {
+        minHeight: '100vh',
+        backgroundColor: '#f4f7f6',
+        paddingBottom: '40px'
+    };
+
     useEffect(() => {
         if (userId) {
             API_DEVICES.getDevicesByUserId(userId, (result, status, err) => {
                 if (result !== null && status === 200) {
-                    // Add 'isActive' property locally
                     const devicesWithStatus = result.map(dev => ({
                         ...dev,
-                        isActive: true // Default to active
+                        isActive: true
                     }));
 
                     setDevices(devicesWithStatus);
@@ -43,7 +54,6 @@ function Home() {
         }
     }, [userId]);
 
-    // --- TOGGLE LOGIC ---
     const toggleDeviceStatus = (id) => {
         const updatedDevices = devices.map(dev => {
             if (dev.id === id) {
@@ -54,10 +64,12 @@ function Home() {
         setDevices(updatedDevices);
     };
 
-    // --- 2. STATISTICS LOGIC ---
+    const goToChart = (deviceId) => {
+        window.location.href = `/energy-chart/${deviceId}`;
+    };
+
     const totalDevices = devices.length;
 
-    // Sum only active devices
     const totalActiveConsumption = devices
         .filter(dev => dev.isActive)
         .reduce((acc, dev) => acc + dev.maxConsumption, 0);
@@ -68,15 +80,15 @@ function Home() {
         : { name: "None", maxConsumption: 0 };
 
 
-    // --- 3. FILTER LOGIC ---
     const filteredDevices = devices.filter(dev =>
         dev.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
 
     return (
-        <div>
-            <Jumbotron fluid style={{backgroundColor: '#007bff', color: 'white', padding: '40px', marginBottom: '30px'}}>
-                <Container fluid>
+        <div style={pageStyle}>
+
+            <Jumbotron fluid style={{backgroundColor: '#007bff', color: 'white', padding: '40px 0', marginBottom: '40px', boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1)'}}>
+                <Container>
                     <h1 className="display-4">Welcome, {username}!</h1>
                     <p className="lead">Manage your smart energy consumption in real-time.</p>
                 </Container>
@@ -85,9 +97,8 @@ function Home() {
             <Container>
                 {error && <Alert color="danger">{error}</Alert>}
 
-                {/* STATISTICS CARDS */}
                 <Row className="mb-5">
-                    <Col md="4">
+                    <Col md="4" className="mb-3">
                         <Card style={{...cardStyle, borderLeft: '5px solid #17a2b8'}}>
                             <CardBody>
                                 <CardTitle tag="h5" className="text-muted text-uppercase mb-2">Total Sensors</CardTitle>
@@ -97,7 +108,7 @@ function Home() {
                             </CardBody>
                         </Card>
                     </Col>
-                    <Col md="4">
+                    <Col md="4" className="mb-3">
                         <Card style={{...cardStyle, borderLeft: '5px solid #28a745'}}>
                             <CardBody>
                                 <CardTitle tag="h5" className="text-muted text-uppercase mb-2">Active Consumption</CardTitle>
@@ -107,7 +118,7 @@ function Home() {
                             </CardBody>
                         </Card>
                     </Col>
-                    <Col md="4">
+                    <Col md="4" className="mb-3">
                         <Card style={{...cardStyle, borderLeft: '5px solid #dc3545'}}>
                             <CardBody>
                                 <CardTitle tag="h5" className="text-muted text-uppercase mb-2">Top Consumer</CardTitle>
@@ -120,12 +131,11 @@ function Home() {
                     </Col>
                 </Row>
 
-                <hr />
+                <hr style={{borderColor: '#ccc'}} />
 
-                {/* SEARCH BAR */}
-                <Row className="mb-3 align-items-center">
+                <Row className="mb-4 align-items-center">
                     <Col md="8">
-                        <h3>Your Devices</h3>
+                        <h3 style={{color: '#333'}}>Your Devices</h3>
                     </Col>
                     <Col md="4">
                         <Input
@@ -133,66 +143,107 @@ function Home() {
                             placeholder="🔍 Search device..."
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
-                            style={{borderRadius: '20px'}}
+                            style={{borderRadius: '20px', border: '1px solid #ced4da'}}
                         />
                     </Col>
                 </Row>
 
-                {/* DEVICES LIST */}
                 <Row>
                     {filteredDevices.length > 0 ? (
                         filteredDevices.map(dev => (
                             <Col sm="6" md="4" key={dev.id} className="mb-4">
                                 <Card
                                     body
-                                    outline
-                                    color={dev.isActive ? "secondary" : "light"} // Slight visual change if inactive
-                                    className="h-100 shadow-sm"
-                                    style={{borderRadius: '15px', opacity: dev.isActive ? 1 : 0.6}}
+                                    className="h-100 shadow-sm border-0"
+                                    style={{
+                                        borderRadius: '15px',
+                                        opacity: dev.isActive ? 1 : 0.7,
+                                        backgroundColor: 'white',
+                                        transition: 'transform 0.2s'
+                                    }}
                                 >
                                     <CardBody>
-                                        <CardTitle tag="h5" style={{fontWeight: 'bold', color: '#343a40'}}>
-                                            {dev.name}
-                                        </CardTitle>
-                                        <hr/>
-                                        <CardText>
-                                            <strong>Max Consumption:</strong> {dev.maxConsumption} kWh
+                                        <div className="d-flex justify-content-between align-items-start">
+                                            <CardTitle tag="h5" style={{fontWeight: 'bold', color: '#343a40'}}>
+                                                {dev.name}
+                                            </CardTitle>
+                                            <div style={{
+                                                width: '12px',
+                                                height: '12px',
+                                                borderRadius: '50%',
+                                                backgroundColor: dev.isActive ? '#28a745' : '#6c757d'
+                                            }}></div>
+                                        </div>
+
+                                        <hr className="my-3"/>
+
+                                        <CardText className="text-muted mb-4">
+                                            Max limit: <strong className="text-dark">{dev.maxConsumption} kWh</strong>
                                         </CardText>
 
-                                        {/* STATUS LINE + BUTTON */}
-                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '15px'}}>
-
-                                            {/* Left side: Status Text */}
-                                            <span className="text-muted" style={{fontSize: '0.9em'}}>
-                                                Status: <Badge color={dev.isActive ? "success" : "secondary"}>
-                                                    {dev.isActive ? "Active" : "Inactive"}
-                                                </Badge>
-                                            </span>
-
-                                            {/* Right side: Button */}
+                                        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center'}}>
                                             <Button
                                                 size="sm"
                                                 color={dev.isActive ? "outline-danger" : "outline-success"}
                                                 onClick={() => toggleDeviceStatus(dev.id)}
+                                                style={{borderRadius: '20px', paddingLeft: '15px', paddingRight: '15px'}}
                                             >
-                                                {dev.isActive ? "Deactivate" : "Activate"}
+                                                {dev.isActive ? "Turn Off" : "Turn On"}
+                                            </Button>
+
+                                            <Button
+                                                size="sm"
+                                                color="primary"
+                                                onClick={() => goToChart(dev.id)}
+                                                style={{borderRadius: '20px', boxShadow: '0 2px 5px rgba(0,123,255,0.3)'}}
+                                            >
+                                                History 📈
                                             </Button>
                                         </div>
-
                                     </CardBody>
                                 </Card>
                             </Col>
                         ))
                     ) : (
                         <Col>
-                            <Alert color="light" className="text-center">
-                                No devices found.
+                            <Alert color="light" className="text-center shadow-sm border-0">
+                                No devices found matching your search.
                             </Alert>
                         </Col>
                     )}
                 </Row>
-
             </Container>
+
+            {!isChatOpen && (
+                <Button
+                    color="primary"
+                    className="shadow-lg"
+                    style={{
+                        position: 'fixed',
+                        bottom: '30px',
+                        right: '30px',
+                        borderRadius: '50%',
+                        width: '60px',
+                        height: '60px',
+                        fontSize: '24px',
+                        zIndex: 999
+                    }}
+                    onClick={() => setIsChatOpen(true)}
+                >
+                    💬
+                </Button>
+            )}
+
+            {isChatOpen && (
+                <ChatWindow
+                    onClose={() => setIsChatOpen(false)}
+                    myUserId={userId}
+                    otherUserId={ADMIN_ID}
+                    otherUserName="Support"
+                    role="CLIENT"
+                />
+            )}
+
         </div>
     );
 }

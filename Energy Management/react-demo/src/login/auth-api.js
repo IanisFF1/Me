@@ -3,7 +3,7 @@ import RestApiClient from "../commons/api/rest-client";
 
 const endpoint = {
     login: '/auth/login',
-    register: '/auth/register' // <--- Endpoint nou
+    register: '/auth/register'
 };
 
 function loginUser(user, callback) {
@@ -37,5 +37,5 @@ function registerUser(user, callback) {
 
 export {
     loginUser,
-    registerUser // <--- Nu uita exportul!
+    registerUser
 };

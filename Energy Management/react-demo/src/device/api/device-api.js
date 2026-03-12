@@ -5,7 +5,10 @@ const endpoint = {
     device: '/devices'
 };
 
-// --- CRUD STANDARD ---
+const endpointMonitoring = {
+    measurements: '/monitoring'
+};
+
 
 function getDevices(callback) {
     let request = new Request(HOST.backend_api + endpoint.device, {
@@ -15,8 +18,8 @@ function getDevices(callback) {
     RestApiClient.performRequest(request, callback);
 }
 
-function getDeviceById(params, callback){
-    let request = new Request(HOST.backend_api + endpoint.device + '/' + params.id, {
+function getDeviceById(id, callback){
+    let request = new Request(HOST.backend_api + endpoint.device + '/' + id, {
         method: 'GET'
     });
     console.log(request.url);
@@ -57,9 +60,7 @@ function updateDevice(id, device, callback) {
     RestApiClient.performRequest(request, callback);
 }
 
-// --- FUNCTII SPECIALE PENTRU ASIGNARE ---
 
-// Atribuie un user unui device (PATCH /devices/{deviceId}/assign/{userId})
 function assignUserToDevice(deviceId, userId, callback) {
     let request = new Request(HOST.backend_api + endpoint.device + '/' + deviceId + '/assign/' + userId, {
         method: 'PATCH',
@@ -72,11 +73,8 @@ function assignUserToDevice(deviceId, userId, callback) {
     RestApiClient.performRequest(request, callback);
 }
 
-// Optional: Dezleaga un user (daca ai implementat endpoint-ul de unassign)
-// Daca nu ai endpoint dedicat, poti folosi updateDevice si trimiti userId: null (dar backend-ul trebuie sa permita)
 function unassignUserFromDevice(deviceId, callback) {
-    // Presupunand ca ai facut endpoint-ul de unassign pe care l-am discutat
-    // Daca nu, lasam comentat sau adaptam
+
     let request = new Request(HOST.backend_api + endpoint.device + '/' + deviceId + '/unassign', {
         method: 'PATCH'
     });
@@ -84,12 +82,19 @@ function unassignUserFromDevice(deviceId, callback) {
     RestApiClient.performRequest(request, callback);
 }
 
-// Adauga functia asta:
 function getDevicesByUserId(userId, callback) {
     let request = new Request(HOST.backend_api + endpoint.device + '/user/' + userId, {
         method: 'GET'
     });
     console.log("My Devices URL: " + request.url);
+    RestApiClient.performRequest(request, callback);
+}
+
+function getMeasurements(deviceId, callback) {
+    let request = new Request(HOST.backend_api + endpointMonitoring.measurements + '/' + deviceId, {
+        method: 'GET'
+    });
+    console.log("Measurements URL: " + request.url);
     RestApiClient.performRequest(request, callback);
 }
 
@@ -101,5 +106,6 @@ export {
     updateDevice,
     assignUserToDevice,
     unassignUserFromDevice,
-    getDevicesByUserId
+    getDevicesByUserId,
+    getMeasurements
 };

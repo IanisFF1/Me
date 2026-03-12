@@ -22,15 +22,12 @@ public class JwtUtil {
         return Keys.hmacShaKeyFor(secret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // Extrage Username-ul din Token
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
 
-    // Extrage Rolurile din Token (ne trebuie pentru autorizare)
     public List<String> extractRoles(String token) {
         Claims claims = extractAllClaims(token);
-        // "roles" este cheia pe care am pus-o in Auth Service
         return claims.get("roles", List.class);
     }
 
@@ -55,10 +52,8 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    // Valideaza Token-ul
     public Boolean validateToken(String token) {
-        // Daca parseClaimsJws nu arunca exceptie, semnatura e buna.
-        // Verificam doar daca a expirat.
+
         return !isTokenExpired(token);
     }
 }

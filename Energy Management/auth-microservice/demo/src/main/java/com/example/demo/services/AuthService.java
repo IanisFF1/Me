@@ -33,12 +33,9 @@ public class AuthService {
     private final PasswordEncoder passwordEncoder;
     private final RestTemplate restTemplate;
 
-    // 1. Injectam uneltele necesare pentru Login
     private final AuthenticationManager authenticationManager;
     private final JwtUtils jwtUtils;
 
-    // URL-ul catre User Microservice (pentru sincronizare)
-    // Daca esti in Docker foloseste numele containerului: "http://user-microservice:8080/people"
     private final String USER_SERVICE_URL = "http://user-service:8080/people";
 
     @Autowired
@@ -73,7 +70,7 @@ public class AuthService {
             userProfile.put("name", registerRequestDTO.getName());
             userProfile.put("age", registerRequestDTO.getAge());
             userProfile.put("address", registerRequestDTO.getAddress());
-            userProfile.put("role", registerRequestDTO.getRole().name()); // Trimitem si rolul
+            userProfile.put("role", registerRequestDTO.getRole().name());
 
 
             restTemplate.postForObject(USER_SERVICE_URL, userProfile, Void.class);
@@ -83,35 +80,27 @@ public class AuthService {
         } catch (Exception e) {
 
             LOGGER.error("Eroare la sincronizarea cu User Service: {}", e.getMessage());
-            // Optional: Poti sterge userul din Auth DB daca vrei sa fie tranzactional (totul sau nimic)
             userCredentialRepository.delete(savedUser);
             throw new RuntimeException("Sincronizarea a esuat. Userul nu a fost creat.");
         }
     }
 
-    // --- METODA DE LOGIN (Noua si Finala) ---
     public JwtResponseDTO login(LoginRequestDTO loginRequest) {
-        // 1. Autentificarea propriu-zisa
-        // Asta verifica username-ul si parola hash-uita. Daca nu e ok, arunca exceptie.
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
 
-        // 2. Setam autentificarea in contextul de securitate (Spring Security context)
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // 3. Generam Token-ul JWT
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        // 4. Extragem detaliile userului logat (ID, Role, etc.)
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
-        // Extragem rolul (Spring returneaza o lista, noi luam primul element ca String)
         String role = userDetails.getAuthorities().stream()
                 .map(item -> item.getAuthority())
                 .findFirst()
                 .orElse("CLIENT");
 
-        // 5. Returnam raspunsul complet
         return new JwtResponseDTO(
                 jwt,
                 userDetails.getId(),
@@ -120,7 +109,6 @@ public class AuthService {
         );
     }
 
-    // In AuthService.java
 
     public void deleteUser(UUID id) {
         if (userCredentialRepository.existsById(id)) {

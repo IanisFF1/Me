@@ -12,6 +12,7 @@ public class DemoApplication {
 		SpringApplication.run(DemoApplication.class, args);
 	}
 
+	// Adaugă acest Bean pentru a putea face request-uri către celălalt microserviciu
 	@Bean
 	public RestTemplate restTemplate() {
 		return new RestTemplate();

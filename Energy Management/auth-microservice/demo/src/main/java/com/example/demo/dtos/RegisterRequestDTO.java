@@ -7,7 +7,6 @@ public class RegisterRequestDTO {
     private String password;
     private Role role;
 
-    // The part to be sent to the user microservice
     private String name;
     private int age;
     private String address;

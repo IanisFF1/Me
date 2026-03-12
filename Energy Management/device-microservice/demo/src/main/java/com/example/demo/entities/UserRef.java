@@ -7,7 +7,7 @@ import jakarta.persistence.Table;
 import java.util.UUID;
 
 @Entity
-@Table(name = "user_refs") // Nume diferit ca sa nu se confunde cu vreun keyword SQL
+@Table(name = "user_refs")
 public class UserRef {
 
     @Id

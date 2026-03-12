@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.List;
 
 @RestController
-@RequestMapping("/sync/users")
+@RequestMapping("/devices/sync/users")
 public class UserSyncController {
 
     private final UserRefRepository userRefRepository;
@@ -33,11 +33,9 @@ public class UserSyncController {
     @DeleteMapping("/{id}")
     @Transactional
     public void deleteUser(@PathVariable UUID id) {
-        // 1. Dezlegam device-urile (userId devine NULL)
         deviceRepository.detachDevicesFromUser(id);
         System.out.println("Device-urile au fost dezlegate de userul: " + id);
 
-        // 2. Stergem userul din tabelul local UserRef
         userRefRepository.deleteById(id);
         System.out.println("User sters din Device DB: " + id);
     }

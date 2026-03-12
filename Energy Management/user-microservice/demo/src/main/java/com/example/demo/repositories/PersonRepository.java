@@ -20,12 +20,6 @@ public interface PersonRepository extends JpaRepository<Person, UUID> {
     /**
      * Example: Custom query
      */
-    @Query(value = "SELECT p " +
-            "FROM Person p " +
-            "WHERE p.name = :name " +
-            "AND p.age >= 60  ")
-    Optional<Person> findSeniorsByName(@Param("name") String name);
-
     List<Person> findByRole(Role role);
 
 }

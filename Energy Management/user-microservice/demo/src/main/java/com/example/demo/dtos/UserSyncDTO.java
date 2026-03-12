@@ -11,7 +11,6 @@ public class UserSyncDTO {
         this.name = name;
     }
 
-    // Getters si Setters (sau @Data daca ai Lombok)
     public UUID getId() { return id; }
     public void setId(UUID id) { this.id = id; }
     public String getName() { return name; }

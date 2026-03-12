@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     Table, Button, Container, Modal, ModalHeader, ModalBody, ModalFooter,
-    Form, FormGroup, Label, Input, Alert, Badge, Row
+    Form, FormGroup, Label, Input, Alert, Badge, Row, Col, Card, CardBody
 } from 'reactstrap';
 import * as API_DEVICES from './api/device-api';
 import * as API_USERS from '../person/api/person-api';
@@ -12,7 +12,6 @@ function AdminDevices() {
     const [isLoaded, setIsLoaded] = useState(false);
     const [error, setError] = useState(null);
 
-    // --- MODALE ---
     const [modal, setModal] = useState(false);
     const [deleteModal, setDeleteModal] = useState(false);
     const [assignModal, setAssignModal] = useState(false);
@@ -20,7 +19,6 @@ function AdminDevices() {
 
     const [isEditMode, setIsEditMode] = useState(false);
 
-    // --- STATE CURENT ---
     const [currentDevice, setCurrentDevice] = useState({
         id: '',
         name: '',
@@ -30,11 +28,16 @@ function AdminDevices() {
     const [deviceToDelete, setDeviceToDelete] = useState(null);
     const [deviceToUnassign, setDeviceToUnassign] = useState(null);
 
-    // Pentru Assign
     const [selectedDeviceForAssign, setSelectedDeviceForAssign] = useState(null);
     const [selectedUserForAssign, setSelectedUserForAssign] = useState('');
 
-    // --- FETCH DATA ---
+    const pageStyle = {
+        minHeight: '100vh',
+        backgroundColor: '#f4f7f6',
+        paddingTop: '50px',
+        paddingBottom: '50px'
+    };
+
     const fetchData = () => {
         API_DEVICES.getDevices((result, status, err) => {
             if (result !== null && status === 200) {
@@ -60,19 +63,16 @@ function AdminDevices() {
         fetchData();
     }, []);
 
-    // --- HELPER: Gaseste numele userului dupa ID ---
     const getUserNameById = (userId) => {
         const user = users.find(u => u.id === userId);
         return user ? user.name : userId;
     };
 
-    // --- TOGGLES ---
     const toggle = () => { setModal(!modal); setError(null); };
     const toggleDeleteModal = () => setDeleteModal(!deleteModal);
     const toggleAssignModal = () => setAssignModal(!assignModal);
     const toggleUnassignModal = () => setUnassignModal(!unassignModal);
 
-    // --- LOGICA ADD / EDIT ---
     const openAddModal = () => {
         setCurrentDevice({ name: '', maxConsumption: '' });
         setIsEditMode(false);
@@ -116,7 +116,6 @@ function AdminDevices() {
         }
     };
 
-    // --- LOGICA DELETE ---
     const handleDeleteClick = (id) => {
         setDeviceToDelete(id);
         setDeleteModal(true);
@@ -133,7 +132,6 @@ function AdminDevices() {
         });
     };
 
-    // --- LOGICA ASSIGN ---
     const openAssignModalHandler = (deviceId) => {
         setSelectedDeviceForAssign(deviceId);
         toggleAssignModal();
@@ -154,7 +152,6 @@ function AdminDevices() {
         });
     };
 
-    // --- LOGICA UNASSIGN ---
     const openUnassignModalHandler = (deviceId) => {
         setDeviceToUnassign(deviceId);
         toggleUnassignModal();
@@ -176,138 +173,170 @@ function AdminDevices() {
     };
 
     return (
-        <Container>
-            <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                <h2 className="mt-4">Device Management</h2>
-                <Button color="outline-secondary" className="mt-4" onClick={openAddModal}>Add Device</Button>
-            </div>
+        <div style={pageStyle}>
+            <Container>
 
+                <Card className="shadow border-0" style={{borderRadius: '15px'}}>
+                    <CardBody className="p-4">
 
+                        <Row className="mb-4 align-items-center">
+                            <Col>
+                                <h3 style={{fontWeight: 'bold', color: '#333', margin: 0}}>Device Management</h3>
+                                <p className="text-muted mb-0">Manage smart sensors and user assignments</p>
+                            </Col>
+                            <Col className="text-right" md="auto">
+                                <Button color="success" onClick={openAddModal} style={{borderRadius: '20px', boxShadow: '0 2px 5px rgba(40, 167, 69, 0.3)'}}>
+                                    + Add New Device
+                                </Button>
+                            </Col>
+                        </Row>
 
+                        {error && <Alert color="danger">{error}</Alert>}
 
-            {error && <Alert color="danger">{error}</Alert>}
+                        <div className="table-responsive">
+                            <Table hover className="align-middle">
+                                <thead className="bg-light">
+                                <tr>
+                                    <th className="border-0">Full ID</th>
+                                    <th className="border-0">Name</th>
+                                    <th className="border-0">Max Cons.</th>
+                                    <th className="border-0" style={{width: '35%'}}>Assigned users</th>
+                                    <th className="border-0 text-right">Actions</th>
+                                </tr>
+                                </thead>
+                                <tbody>
+                                {devices.map(dev => (
+                                    <tr key={dev.id}>
+                                        <td style={{verticalAlign: 'middle'}}>
+                                            <div style={{
+                                                fontSize: '0.75rem',
+                                                color: '#555',
+                                                fontFamily: 'monospace',
+                                                backgroundColor: '#f8f9fa',
+                                                padding: '4px 8px',
+                                                borderRadius: '4px',
+                                                border: '1px solid #e9ecef',
+                                                userSelect: 'all',
+                                                cursor: 'text',
+                                                width: 'fit-content'
+                                            }}>
+                                                {dev.id}
+                                            </div>
+                                        </td>
 
-            <Table striped bordered hover responsive>
-                <thead style={{backgroundColor: '#343a40', color: 'white'}}>
-                <tr>
-                    <th>Name</th>
-                    <th>Max Consumption</th>
-                    <th style={{width: '35%'}}>Assigned users</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {devices.map(dev => (
-                    <tr key={dev.id}>
-                        <td>{dev.name}</td>
-                        <td>{dev.maxConsumption}</td>
+                                        <td style={{fontWeight: '500'}}>{dev.name}</td>
+                                        <td>{dev.maxConsumption} kWh</td>
 
-                        <td style={{textAlign: 'center'}}>
-                            {dev.userId ? (
+                                        <td style={{textAlign: 'center'}}>
+                                            {dev.userId ? (
+                                                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                                                    <div style={{textAlign: 'left'}}>
+                                                        <Badge color="success" className="mr-2" style={{padding: '5px 10px'}}>Assigned</Badge>
+                                                        <span style={{fontWeight: 'bold', fontSize: '0.9em', color: '#333'}}>
+                                                            To: {getUserNameById(dev.userId)}
+                                                        </span>
+                                                    </div>
+                                                    <Button color="warning" size="sm" onClick={() => openUnassignModalHandler(dev.id)} style={{borderRadius: '15px'}}>
+                                                        Unassign
+                                                    </Button>
+                                                </div>
+                                            ) : (
+                                                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+                                                    <div style={{textAlign: 'left'}}>
+                                                        <Badge color="secondary" className="mr-2" style={{padding: '5px 10px'}}>Unassigned</Badge>
+                                                    </div>
+                                                    <Button color="success" size="sm" onClick={() => openAssignModalHandler(dev.id)} style={{borderRadius: '15px'}}>
+                                                        Assign User
+                                                    </Button>
+                                                </div>
+                                            )}
+                                        </td>
 
-                                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                    <div style={{textAlign: 'left'}}>
-                                        <Badge color="success" className="mr-2">Assigned</Badge>
-                                        <span style={{fontWeight: 'bold', fontSize: '0.9em'}}>
-                                            To: {getUserNameById(dev.userId)}
-                                        </span>
-                                    </div>
-                                    <Button color="warning" size="sm" onClick={() => openUnassignModalHandler(dev.id)}>
-                                        Unassign
-                                    </Button>
-                                </div>
-                            ) : (
-                                // CAZUL 2: NU ARE OWNER -> Badge Gri + Buton Assign
-                                <div style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
-                                    <div style={{textAlign: 'left'}}>
-                                        <Badge color="secondary" className="mr-2">Unassigned</Badge>
-                                    </div>
-                                    <Button color="success" size="sm" onClick={() => openAssignModalHandler(dev.id)}>
-                                        Assign User
-                                    </Button>
-                                </div>
-                            )}
-                        </td>
-
-                        <td>
-                            <Button color="info" size="sm" className="mr-2" onClick={() => openEditModal(dev)}>Edit</Button>
-                            <Button color="danger" size="sm" onClick={() => handleDeleteClick(dev.id)}>Delete</Button>
-                        </td>
-                    </tr>
-                ))}
-                </tbody>
-            </Table>
-
-            {/* MODAL ADD/EDIT */}
-            <Modal isOpen={modal} toggle={toggle}>
-                <ModalHeader toggle={toggle}>{isEditMode ? 'Edit Device' : 'Add Device'}</ModalHeader>
-                <ModalBody>
-                    <Form>
-                        <FormGroup>
-                            <Label>Name</Label>
-                            <Input name="name" value={currentDevice.name} onChange={handleChange} />
-                        </FormGroup>
-                        <FormGroup>
-                            <Label>Max Hourly Consumption</Label>
-                            <Input type="number" name="maxConsumption" value={currentDevice.maxConsumption} onChange={handleChange} />
-                        </FormGroup>
-                    </Form>
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="primary" onClick={handleSave}>Save</Button>
-                    <Button color="secondary" onClick={toggle}>Cancel</Button>
-                </ModalFooter>
-            </Modal>
-
-            {/* MODAL DELETE */}
-            <Modal isOpen={deleteModal} toggle={toggleDeleteModal}>
-                <ModalHeader toggle={toggleDeleteModal}>Delete Device</ModalHeader>
-                <ModalBody>Are you sure you want to delete this device?</ModalBody>
-                <ModalFooter>
-                    <Button color="danger" onClick={confirmDelete}>Delete</Button>
-                    <Button color="secondary" onClick={toggleDeleteModal}>Cancel</Button>
-                </ModalFooter>
-            </Modal>
-
-            {/* MODAL UNASSIGN */}
-            <Modal isOpen={unassignModal} toggle={toggleUnassignModal}>
-                <ModalHeader toggle={toggleUnassignModal}>Unassign Device</ModalHeader>
-                <ModalBody>
-                    Are you sure you want to remove the owner from this device?
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="warning" onClick={confirmUnassign}>Confirm Unassign</Button>
-                    <Button color="secondary" onClick={toggleUnassignModal}>Cancel</Button>
-                </ModalFooter>
-            </Modal>
-
-            {/* MODAL ASSIGN */}
-            <Modal isOpen={assignModal} toggle={toggleAssignModal}>
-                <ModalHeader toggle={toggleAssignModal}>Select User for Device</ModalHeader>
-                <ModalBody>
-                    <Form>
-                        <FormGroup>
-                            <Label>Available Users (Clients):</Label>
-                            <Input type="select"
-                                   onChange={(e) => setSelectedUserForAssign(e.target.value)}
-                                   value={selectedUserForAssign}
-                            >
-                                {users.filter(u => u.role === 'CLIENT').map(u => (
-                                    <option key={u.id} value={u.id}>
-                                        {u.name} (Age: {u.age})
-                                    </option>
+                                        <td className="text-right">
+                                            <Button color="light" size="sm" className="mr-2 text-primary" onClick={() => openEditModal(dev)} style={{marginRight: '5px', fontWeight: 'bold'}}>
+                                                Edit
+                                            </Button>
+                                            <Button color="light" size="sm" className="text-danger" onClick={() => handleDeleteClick(dev.id)} style={{fontWeight: 'bold'}}>
+                                                Delete
+                                            </Button>
+                                        </td>
+                                    </tr>
                                 ))}
-                            </Input>
-                        </FormGroup>
-                    </Form>
-                </ModalBody>
-                <ModalFooter>
-                    <Button color="success" onClick={handleAssign}>Select & Assign</Button>
-                    <Button color="secondary" onClick={toggleAssignModal}>Cancel</Button>
-                </ModalFooter>
-            </Modal>
+                                </tbody>
+                            </Table>
+                        </div>
+                    </CardBody>
+                </Card>
 
-        </Container>
+                <Modal isOpen={modal} toggle={toggle} centered>
+                    <ModalHeader toggle={toggle} className="border-0">{isEditMode ? 'Edit Device' : 'Add New Device'}</ModalHeader>
+                    <ModalBody>
+                        <Form>
+                            <FormGroup>
+                                <Label className="fw-bold">Device Name</Label>
+                                <Input name="name" value={currentDevice.name} onChange={handleChange} />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label className="fw-bold">Max Hourly Consumption (kWh)</Label>
+                                <Input type="number" name="maxConsumption" value={currentDevice.maxConsumption} onChange={handleChange} />
+                            </FormGroup>
+                        </Form>
+                    </ModalBody>
+                    <ModalFooter className="border-0">
+                        <Button color="primary" onClick={handleSave} style={{borderRadius: '20px'}}>Save</Button>
+                        <Button color="secondary" onClick={toggle} style={{borderRadius: '20px'}}>Cancel</Button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={deleteModal} toggle={toggleDeleteModal} centered>
+                    <ModalHeader toggle={toggleDeleteModal} className="border-0 text-danger">Delete Device</ModalHeader>
+                    <ModalBody>
+                        Are you sure you want to delete this device? This action cannot be undone.
+                    </ModalBody>
+                    <ModalFooter className="border-0">
+                        <Button color="danger" onClick={confirmDelete} style={{borderRadius: '20px'}}>Delete</Button>
+                        <Button color="secondary" onClick={toggleDeleteModal} style={{borderRadius: '20px'}}>Cancel</Button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={unassignModal} toggle={toggleUnassignModal} centered>
+                    <ModalHeader toggle={toggleUnassignModal} className="border-0 text-warning">Unassign Device</ModalHeader>
+                    <ModalBody>
+                        Are you sure you want to remove the owner from this device?
+                    </ModalBody>
+                    <ModalFooter className="border-0">
+                        <Button color="warning" onClick={confirmUnassign} style={{borderRadius: '20px', color: 'white'}}>Confirm Unassign</Button>
+                        <Button color="secondary" onClick={toggleUnassignModal} style={{borderRadius: '20px'}}>Cancel</Button>
+                    </ModalFooter>
+                </Modal>
+
+                <Modal isOpen={assignModal} toggle={toggleAssignModal} centered>
+                    <ModalHeader toggle={toggleAssignModal} className="border-0 text-success">Assign User to Device</ModalHeader>
+                    <ModalBody>
+                        <Form>
+                            <FormGroup>
+                                <Label className="fw-bold">Select Client:</Label>
+                                <Input type="select"
+                                       onChange={(e) => setSelectedUserForAssign(e.target.value)}
+                                       value={selectedUserForAssign}
+                                >
+                                    {users.filter(u => u.role === 'CLIENT').map(u => (
+                                        <option key={u.id} value={u.id}>
+                                            {u.name} (Age: {u.age})
+                                        </option>
+                                    ))}
+                                </Input>
+                            </FormGroup>
+                        </Form>
+                    </ModalBody>
+                    <ModalFooter className="border-0">
+                        <Button color="success" onClick={handleAssign} style={{borderRadius: '20px'}}>Assign User</Button>
+                        <Button color="secondary" onClick={toggleAssignModal} style={{borderRadius: '20px'}}>Cancel</Button>
+                    </ModalFooter>
+                </Modal>
+
+            </Container>
+        </div>
     );
 }
 

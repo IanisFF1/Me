@@ -6,28 +6,34 @@ function performRequest(request, callback) {
 
     fetch(request)
         .then(function(response) {
+            // --- FIX PENTRU RESTART DOCKER / TOKEN EXPIRAT ---
+            if (response.status === 401 || response.status === 403) {
+                // Dacă backend-ul ne respinge, ștergem tot și mergem la Login
+                sessionStorage.clear();
+                localStorage.clear();
+                window.location.href = "/"; // Force refresh la pagina de login
+                return;
+            }
+            // -------------------------------------------------
+
             if (response.ok) {
-                // MODIFICARE CRITICA: Citim ca text intai!
                 response.text().then(text => {
-                    // Daca textul e gol, returnam un obiect gol, altfel il parsam
                     const data = text && text.length > 0 ? JSON.parse(text) : {};
                     callback(data, response.status, null);
                 });
             } else {
-                // La fel si pentru erori
                 response.text().then(text => {
                     let err = text;
                     try {
-                        err = JSON.parse(text); // Incercam sa vedem daca e JSON
+                        err = JSON.parse(text);
                     } catch (e) {
-                        // Daca nu e JSON, lasam textul simplu
+                        // ignore
                     }
                     callback(null, response.status, err);
                 });
             }
         })
         .catch(function(err) {
-            // Erori de retea
             callback(null, 1, err)
         });
 }

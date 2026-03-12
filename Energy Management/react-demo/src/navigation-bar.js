@@ -26,14 +26,12 @@ const NavigationBar = () => {
                         </>
                     )}
 
-                    {/* MENIU CLIENT */}
                     {role === 'CLIENT' && (
                         <>
                             <NavItem>
                                 <NavLink href="/">Dashboard</NavLink>
                             </NavItem>
                             <NavItem>
-                                {/* Buton Nou */}
                                 <NavLink href="/my-profile">My Profile</NavLink>
                             </NavItem>
                         </>

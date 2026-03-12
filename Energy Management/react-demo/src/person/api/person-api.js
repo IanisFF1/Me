@@ -24,7 +24,6 @@ function postPerson(user, callback){
     RestApiClient.performRequest(request, callback);
 }
 
-// --- FUNCTII NOI PENTRU ADMIN ---
 
 function deletePerson(id, callback) {
     let request = new Request(HOST.backend_api + endpoint.person + '/' + id, {
@@ -36,7 +35,7 @@ function deletePerson(id, callback) {
 
 function updatePerson(id, user, callback) {
     let request = new Request(HOST.backend_api + endpoint.person + '/' + id, {
-        method: 'PUT', // Sau PATCH, depinde cum ai in backend. De obicei update total e PUT.
+        method: 'PUT',
         headers : { 'Content-Type': 'application/json' },
         body: JSON.stringify(user)
     });

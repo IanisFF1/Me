@@ -1,21 +1,26 @@
 import React, { useState } from 'react';
-import { Button, Container, Form, FormGroup, Input, Label, Alert } from 'reactstrap';
+import { Button, Container, Form, FormGroup, Input, Label, Alert, Card, CardBody } from 'reactstrap';
 import * as API_USERS from './auth-api';
 import Register from "./Register";
 
 function Login(props) {
-    // Aici tinem minte ce scrie userul
     const [credentials, setCredentials] = useState({
         username: '',
         password: ''
     });
 
-    // Aici tinem minte daca avem eroare
     const [error, setError] = useState(null);
-
     const [showRegister, setShowRegister] = useState(false);
 
-    // Functia care se apeleaza cand scrii in casute
+    const pageStyle = {
+        minHeight: '100vh',
+        backgroundColor: '#f4f7f6',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+    };
+
     const handleChange = (event) => {
         setCredentials({
             ...credentials,
@@ -23,76 +28,88 @@ function Login(props) {
         });
     };
 
-    // Functia care se apeleaza cand apesi butonul
     const handleSubmit = (event) => {
-        event.preventDefault(); // Opreste refresh-ul paginii
-
-        console.log("Incercare login cu:", credentials);
+        event.preventDefault();
 
         API_USERS.loginUser(credentials, (result, status, err) => {
             if (result !== null && (status === 200 || status === 201)) {
-                console.log("Login reusit! Token:", result.token);
-                // Aici vom salva token-ul si vom schimba pagina (Pasul 3)
                 sessionStorage.setItem("token", result.token);
-                sessionStorage.setItem("role", result.role); // <--- Asta e important pentru redirect!
-                sessionStorage.setItem("username", result.username); // Optional, pt Home page
+                sessionStorage.setItem("role", result.role);
+                sessionStorage.setItem("username", result.username);
                 sessionStorage.setItem("userId", result.id)
-                props.onLoginSuccess(); // Anuntam parintele (App.js) ca am reusit
+                props.onLoginSuccess();
+
+                if (result.role == "ADMIN") {
+                    window.location.href = "./admin-users"
+                } else {
+                    window.location.href = "/"
+                }
+
             } else {
                 setError("Login failed! Check username and password.");
-                console.log("Eroare:", err);
             }
         });
     };
 
     if (showRegister) {
         return (
-            <Container className="p-5" style={{ maxWidth: '600px', marginTop: '20px' }}>
-                {/* Ii dam Register-ului o functie sa se intoarca inapoi la Login */}
+            <div style={pageStyle}>
                 <Register onGoToLogin={() => setShowRegister(false)} />
-            </Container>
+            </div>
         );
     }
 
     return (
-        <Container className="p-5" style={{ maxWidth: '500px', marginTop: '50px', backgroundColor: '#f8f9fa', borderRadius: '10px' }}>
-            <h2 className="text-center mb-4">Authentication</h2>
+        <div style={pageStyle}>
+            <Card className="shadow border-0" style={{width: '100%', maxWidth: '500px', borderRadius: '15px'}}>
+                <CardBody className="p-5">
+                    <div className="text-center mb-4">
+                        <h2 style={{color: '#333', fontWeight: 'bold'}}>Welcome Back</h2>
+                        <p className="text-muted">Please login to your account</p>
+                    </div>
 
-            {error && <Alert color="danger">{error}</Alert>}
+                    {error && <Alert color="danger" className="text-center">{error}</Alert>}
 
-            <Form onSubmit={handleSubmit}>
-                <FormGroup>
-                    <Label for="username">Username</Label>
-                    <Input
-                        type="text"
-                        name="username"
-                        id="username"
-                        placeholder="Enter your username"
-                        onChange={handleChange}
-                        required
-                    />
-                </FormGroup>
-                <FormGroup>
-                    <Label for="password">Password</Label>
-                    <Input
-                        type="password"
-                        name="password"
-                        id="password"
-                        placeholder="Enter your passowrd"
-                        onChange={handleChange}
-                        required
-                    />
-                </FormGroup>
-                <Button color="primary" block style={{width: '100%'}}>Login</Button>
+                    <Form onSubmit={handleSubmit}>
+                        <FormGroup>
+                            <Label for="username" className="fw-bold">Username</Label>
+                            <Input
+                                type="text"
+                                name="username"
+                                id="username"
+                                placeholder="Enter your username"
+                                onChange={handleChange}
+                                required
+                                style={{padding: '10px'}}
+                            />
+                        </FormGroup>
+                        <FormGroup className="mb-4">
+                            <Label for="password" className="fw-bold">Password</Label>
+                            <Input
+                                type="password"
+                                name="password"
+                                id="password"
+                                placeholder="Enter your password"
+                                onChange={handleChange}
+                                required
+                                style={{padding: '10px'}}
+                            />
+                        </FormGroup>
 
-                <div className="text-center mt-3">
-                    <p>You don't have an account?</p>
-                    <Button color="secondary" outline onClick={() => setShowRegister(true)}>
-                        Register here
-                    </Button>
-                </div>
-            </Form>
-        </Container>
+                        <Button color="primary" block size="lg" style={{borderRadius: '25px', width: '100%'}}>
+                            Login
+                        </Button>
+
+                        <div className="text-center mt-4">
+                            <span className="text-muted">Don't have an account? </span>
+                            <Button color="link" onClick={() => setShowRegister(true)} style={{padding: 0, verticalAlign: 'baseline'}}>
+                                Register here
+                            </Button>
+                        </div>
+                    </Form>
+                </CardBody>
+            </Card>
+        </div>
     );
 }
 

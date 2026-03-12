@@ -22,26 +22,23 @@ public class JwtUtils {
     @Value("${jwt.expirationMs}")
     private int jwtExpirationMs;
 
-    // Generam cheia criptografica folosind secretul din properties
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes(StandardCharsets.UTF_8));
     }
 
-    // 1. GENERARE TOKEN
     public String generateJwtToken(Authentication authentication) {
         UserDetailsImpl userPrincipal = (UserDetailsImpl) authentication.getPrincipal();
 
         return Jwts.builder()
-                .setSubject((userPrincipal.getUsername())) // Cine e userul?
-                .claim("id", userPrincipal.getId())        // Adaugam si ID-ul in token (util pt frontend)
-                .claim("roles", userPrincipal.getAuthorities()) // Adaugam si rolurile
+                .setSubject((userPrincipal.getUsername()))
+                .claim("id", userPrincipal.getId())
+                .claim("roles", userPrincipal.getAuthorities())
                 .setIssuedAt(new Date())
                 .setExpiration(new Date((new Date()).getTime() + jwtExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)
                 .compact();
     }
 
-    // 2. EXTRAGERE USERNAME DIN TOKEN
     public String getUserNameFromJwtToken(String token) {
         return Jwts.parserBuilder()
                 .setSigningKey(getSigningKey())
@@ -51,7 +48,6 @@ public class JwtUtils {
                 .getSubject();
     }
 
-    // 3. VALIDARE TOKEN
     public boolean validateJwtToken(String authToken) {
         try {
             Jwts.parserBuilder().setSigningKey(getSigningKey()).build().parseClaimsJws(authToken);

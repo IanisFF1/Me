@@ -24,12 +24,12 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Activeaza CORS
-                .csrf(csrf -> csrf.disable()) // Dezactiveaza CSRF
+                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
+                .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll() // CRITIC: Permite "Preflight" pentru oricine
+                        .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/auth/**").permitAll()
-                        .requestMatchers("/auth/**").permitAll() // Permite Login/Register
+                        .requestMatchers("/auth/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -40,15 +40,10 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        // Permite originile tale
         configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000", "http://localhost:80", "http://localhost"));
-        // Permite toate metodele
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
-        // Permite header-ele importante
         configuration.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type", "X-Requested-With", "Accept", "Origin", "Access-Control-Request-Method", "Access-Control-Request-Headers"));
-        // Permite credentials (cookies/auth headers)
         configuration.setAllowCredentials(true);
-        // Expune header-ele catre frontend
         configuration.setExposedHeaders(Arrays.asList("Access-Control-Allow-Origin", "Access-Control-Allow-Credentials"));
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();

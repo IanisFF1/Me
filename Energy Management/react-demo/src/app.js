@@ -2,31 +2,27 @@ import React from 'react'
 import {BrowserRouter as Router, Route, Switch, Redirect} from 'react-router-dom'
 import NavigationBar from './navigation-bar'
 import Home from './home/home';
-import PersonContainer from './person/person-container'
 
 import ErrorPage from './commons/errorhandling/error-page';
 import styles from './commons/styles/project-style.css';
-import Login from './login/Login'; // Importam componenta de Login creata anterior
+import Login from './login/Login';
 import AdminUsers from './person/AdminUsers';
 import AdminDevices from './device/AdminDevices';
 import MyProfile from './person/MyProfile';
-
-
-
+import EnergyChart from './device/EnergyChart';
+import WebSocketComp from './websocket/WebSocketComp';
 
 class App extends React.Component {
 
     constructor(props) {
         super(props);
         this.state = {
-            isAuthenticated: false // Starea initiala: neautentificat
+            isAuthenticated: false
         };
-        // Trebuie sa facem bind la functii ca sa poata folosi "this"
         this.handleLoginSuccess = this.handleLoginSuccess.bind(this);
         this.handleLogout = this.handleLogout.bind(this);
     }
 
-    // Aceasta functie se apeleaza automat cand se incarca aplicatia
     componentDidMount() {
         const token = sessionStorage.getItem("token");
         if (token) {
@@ -40,6 +36,8 @@ class App extends React.Component {
 
     handleLogout() {
         sessionStorage.removeItem("token");
+        sessionStorage.removeItem("role");
+        sessionStorage.removeItem("user");
         this.setState({ isAuthenticated: false });
     }
 
@@ -52,13 +50,12 @@ class App extends React.Component {
             );
         }
 
-        // Luam rolul din sesiune (asigura-te ca l-ai salvat in Login.js!)
         const role = sessionStorage.getItem("role");
 
-        // Daca ESTE autentificat, afisam aplicatia normala (Router-ul)
         return (
             <div className={styles.back}>
-                {/* Buton temporar de logout ca sa poti testa iesirea */}
+                <WebSocketComp />
+
                 <div style={{position: 'absolute', top: '10px', right: '10px', zIndex: 999}}>
                     <button onClick={this.handleLogout} className="btn btn-danger btn-sm">Sign Out</button>
                 </div>
@@ -68,7 +65,6 @@ class App extends React.Component {
                         <NavigationBar />
                         <Switch>
 
-                            {/* RUTA SMART PENTRU HOME */}
                             <Route
                                 exact
                                 path='/'
@@ -80,7 +76,6 @@ class App extends React.Component {
                                 }}
                             />
 
-                            {/* Schimbam path-ul in ceva mai clar */}
                             <Route
                                 exact
                                 path='/admin-users'
@@ -101,15 +96,18 @@ class App extends React.Component {
                                 exact
                                 path='/my-profile'
                                 render={() => (
-                                    // Permitem accesul oricui este logat (indiferent de rol)
                                     this.state.isAuthenticated ? <MyProfile/> : <Redirect to="/" />
                                 )}
                             />
 
+                            <Route
+                                exact
+                                path='/energy-chart/:id'
+                                render={(props) => (
+                                    this.state.isAuthenticated ? <EnergyChart {...props}/> : <Redirect to="/" />
+                                )}
+                            />
 
-
-
-                            {/*Error*/}
                             <Route
                                 exact
                                 path='/error'
@@ -125,4 +123,4 @@ class App extends React.Component {
     };
 }
 
-export default App
+export default App;

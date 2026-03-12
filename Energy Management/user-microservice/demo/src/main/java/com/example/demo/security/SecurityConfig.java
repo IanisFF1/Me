@@ -26,16 +26,11 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                // 1. CORS CONFIGURAT EXPLICIT
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(auth -> auth
-                        // ATENTIE: Aici difera in functie de serviciu (User vs Device)
-                        // USER SERVICE:
-                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/people").permitAll()
-                        // SAU DEVICE SERVICE:
-                        // .requestMatchers("/sync/**").permitAll()
 
+                        .requestMatchers(org.springframework.http.HttpMethod.POST, "/people").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -45,7 +40,6 @@ public class SecurityConfig {
         return http.build();
     }
 
-    // 2. BEAN CORS (Acelasi ca la Auth)
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();

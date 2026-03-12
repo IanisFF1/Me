@@ -31,9 +31,7 @@ public class UserDetailsImpl implements UserDetails {
         this.authorities = authorities;
     }
 
-    // Metoda statica care converteste Entitatea noastra in UserDetails
     public static UserDetailsImpl build(UserCredential user) {
-        // Convertim Rolul (Enum) in Authority (formatul Spring)
         List<GrantedAuthority> authorities = Collections.singletonList(
                 new SimpleGrantedAuthority(user.getRole().name()));
 
@@ -63,7 +61,6 @@ public class UserDetailsImpl implements UserDetails {
         return username;
     }
 
-    // Boilerplate pentru conturi expirate/blocate (le punem true by default)
     @Override
     public boolean isAccountNonExpired() { return true; }
     @Override

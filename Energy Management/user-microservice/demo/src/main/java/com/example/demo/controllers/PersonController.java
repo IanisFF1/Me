@@ -38,7 +38,7 @@ public class PersonController {
                 .path("/{id}")
                 .buildAndExpand(id)
                 .toUri();
-        return ResponseEntity.created(location).build(); // 201 + Location header
+        return ResponseEntity.created(location).build();
     }
 
 
@@ -50,15 +50,13 @@ public class PersonController {
     @PutMapping("/{id}")
     public ResponseEntity<PersonDetailsDTO> updatePerson(@PathVariable UUID id,
                                                          @Valid @RequestBody PersonDetailsDTO personDetailsDTO) {
-        // Service-ul va arunca ResourceNotFoundException daca ID-ul nu exista
         PersonDetailsDTO updatedPerson = personService.update(id, personDetailsDTO);
-        return ResponseEntity.ok(updatedPerson); // 200 OK
+        return ResponseEntity.ok(updatedPerson);
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deletePerson(@PathVariable UUID id) {
-        // Service-ul va arunca ResourceNotFoundException daca ID-ul nu exista
         personService.delete(id);
-        return ResponseEntity.noContent().build(); // 204 No Content
+        return ResponseEntity.noContent().build();
     }
 }

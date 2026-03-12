@@ -2,30 +2,33 @@ version: '3.8'
 
 services:
   # ------------------------------------
-  # TRAEFIK (REVERSE PROXY & GATEWAY)
+  # TRAEFIK
   # ------------------------------------
   traefik:
     image: "traefik:v2.10"
-    container_name: "traefik"
     command:
-      - "--api.insecure=true" # Activeaza Dashboard-ul de admin
-      - "--providers.docker=true" # Ii spune sa asculte de Docker
-      - "--providers.docker.exposedbydefault=false" # Nu expune containere decat daca le zicem noi explicit
-      - "--entrypoints.web.address=:80" # Asculta pe portul 80 (HTTP standard)
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.swarmMode=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
     ports:
-      - "80:80"     # Portul principal al aplicatiei
-      - "8088:8080" # Portul pentru Dashboard-ul Traefik (sa vezi grafice)
+      - "80:80"
+      - "8088:8080"
     volumes:
-      - "/var/run/docker.sock:/var/run/docker.sock:ro" # Are nevoie de acces la Docker ca sa vada serviciile
+      - "/var/run/docker.sock:/var/run/docker.sock:ro"
     networks:
       - energy-net
+    deploy:
+      placement:
+        constraints:
+          - node.role == manager
 
   # ------------------------------------
-  # ZONA USERI
+  # DATABASES
   # ------------------------------------
   user-db:
     image: postgres:15
-    container_name: user-db
     environment:
       POSTGRES_DB: user-db
       POSTGRES_USER: postgres
@@ -35,34 +38,8 @@ services:
     networks:
       - energy-net
 
-  user-service:
-    build: ./user-microservice
-    container_name: user-service
-    # NU mai avem nevoie de ports "8080:8080" expus in afara, trecem doar prin Traefik!
-    # Dar pentru siguranta in dev, le poti lasa comentate sau sterge.
-    depends_on:
-      - user-db
-    environment:
-      DB_IP: user-db
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: ianis1234
-      DB_DBNAME: user-db
-      PORT: 8080
-    networks:
-      - energy-net
-    labels:
-      - "traefik.enable=true"
-      # Regula: Orice request care incepe cu /people se duce aici
-      - "traefik.http.routers.user.rule=PathPrefix(`/people`)"
-      - "traefik.http.services.user.loadbalancer.server.port=8080"
-
-  # ------------------------------------
-  # ZONA DEVICE-URI
-  # ------------------------------------
   device-db:
     image: postgres:15
-    container_name: device-db
     environment:
       POSTGRES_DB: device-db
       POSTGRES_USER: postgres
@@ -72,32 +49,8 @@ services:
     networks:
       - energy-net
 
-  device-service:
-    build: ./device-microservice
-    container_name: device-service
-    depends_on:
-      - device-db
-    environment:
-      DB_IP: device-db
-      DB_PORT: 5432
-      DB_USER: postgres
-      DB_PASSWORD: ianis1234
-      DB_DBNAME: device-db
-      PORT: 8081
-    networks:
-      - energy-net
-    labels:
-      - "traefik.enable=true"
-      # Regula: Orice request care incepe cu /devices se duce aici
-      - "traefik.http.routers.device.rule=PathPrefix(`/devices`)"
-      - "traefik.http.services.device.loadbalancer.server.port=8081"
-
-  # ------------------------------------
-  # ZONA AUTH
-  # ------------------------------------
   auth-db:
     image: postgres:15
-    container_name: auth-db
     environment:
       POSTGRES_DB: credential-db
       POSTGRES_USER: postgres
@@ -107,12 +60,86 @@ services:
     networks:
       - energy-net
 
+  monitoring-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: monitoring-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ianis1234
+    volumes:
+      - monitoring-data:/var/lib/postgresql/data
+    networks:
+      - energy-net
+
+  chat-db:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: chat-db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ianis1234
+    volumes:
+      - chat-data:/var/lib/postgresql/data
+    networks:
+      - energy-net
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    networks:
+      - energy-net
+
+  user-service:
+    image: energy/user:latest
+    build: ./user-microservice
+    depends_on:
+      - user-db
+    environment:
+      DB_IP: user-db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: ianis1234
+      DB_DBNAME: user-db
+      PORT: 8080
+      RABBITMQ_HOST: rabbitmq
+    networks:
+      - energy-net
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.user.rule=PathPrefix(`/people`)"
+        - "traefik.http.services.user.loadbalancer.server.port=8080"
+
+  device-service:
+    image: energy/device:latest
+    build: ./device-microservice
+    depends_on:
+      - device-db
+    environment:
+      DB_IP: device-db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: ianis1234
+      DB_DBNAME: device-db
+      PORT: 8081
+      RABBITMQ_HOST: rabbitmq
+    networks:
+      - energy-net
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.device.rule=PathPrefix(`/devices`) || PathPrefix(`/sync`)"
+        - "traefik.http.services.device.loadbalancer.server.port=8081"
+
   auth-service:
+    image: energy/auth:latest
     build: ./auth-microservice
-    container_name: auth-service
     depends_on:
       - auth-db
-      - user-service
     environment:
       DB_IP: auth-db
       DB_PORT: 5432
@@ -122,17 +149,117 @@ services:
       PORT: 8082
     networks:
       - energy-net
-    labels:
-      - "traefik.enable=true"
-      # Regula: Orice request care incepe cu /auth se duce aici
-      - "traefik.http.routers.auth.rule=PathPrefix(`/auth`)"
-      - "traefik.http.services.auth.loadbalancer.server.port=8082"
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.auth.rule=PathPrefix(`/auth`)"
+        - "traefik.http.services.auth.loadbalancer.server.port=8082"
+
+
+  monitoring-service:
+    image: energy/monitoring:latest
+    build: ./monitoring-microservice
+    depends_on:
+      - monitoring-db
+      - rabbitmq
+    environment:
+      DB_IP: monitoring-db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: ianis1234
+      DB_DBNAME: monitoring-db
+      PORT: 8083
+      RABBITMQ_HOST: rabbitmq
+      INSTANCE_ID: "{{.Task.Slot}}"
+    networks:
+      - energy-net
+    deploy:
+      replicas: 3
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.monitoring.rule=PathPrefix(`/monitoring`)"
+        - "traefik.http.services.monitoring.loadbalancer.server.port=8083"
+
+  chat-service:
+    image: energy/chat:latest
+    build: ./chat-microservice
+    depends_on:
+      - chat-db
+      - rabbitmq
+    environment:
+      DB_IP: chat-db
+      DB_PORT: 5432
+      DB_USER: postgres
+      DB_PASSWORD: ianis1234
+      DB_DBNAME: chat-db
+      PORT: 8085
+      RABBITMQ_HOST: rabbitmq
+    networks:
+      - energy-net
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.chat.rule=PathPrefix(`/chat`)"
+        - "traefik.http.services.chat.loadbalancer.server.port=8085"
+
+  load-balancer:
+    image: energy/load-balancer:latest
+    build: ./load-balancer-microservice
+    depends_on:
+      - rabbitmq
+    environment:
+      RABBITMQ_HOST: rabbitmq
+      MONITORING_REPLICAS_COUNT: 3
+      INPUT_QUEUE: sensor-data-queue
+    networks:
+      - energy-net
+    deploy:
+      replicas: 1
+
+  websocket-service:
+    image: energy/websocket:latest
+    build: ./websocket-microservice
+    depends_on:
+      - rabbitmq
+    environment:
+      PORT: 8084
+      RABBITMQ_HOST: rabbitmq
+    networks:
+      - energy-net
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.websocket.rule=PathPrefix(`/ws`)"
+        - "traefik.http.services.websocket.loadbalancer.server.port=8084"
+
+  frontend:
+    image: energy/frontend:latest
+    build: ./react-demo
+    networks:
+      - energy-net
+    deploy:
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.frontend.rule=PathPrefix(`/`)"
+        - "traefik.http.services.frontend.loadbalancer.server.port=3000"
+
+  sensor-simulator:
+    image: energy/simulator:latest
+    build: ./sensor-simulator
+    environment:
+      SPRING_RABBITMQ_HOST: rabbitmq
+    networks:
+      - energy-net
+    deploy:
+      replicas: 0
 
 volumes:
   user-data:
   device-data:
   auth-data:
+  monitoring-data:
+  chat-data:
 
 networks:
   energy-net:
-    driver: bridge
+    driver: overlay
