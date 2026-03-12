@@ -476,7 +476,7 @@ function isVaultCreated(vaultName) {
 }
 
 function decryptVault() {
-  let key = sessionStorage.getItem("master-key") || masterField.value.trim();
+  let key = sessionStorage.getItem("master-key") || masterField.value.trim() || listKeyField.value.trim();
   let storedData = localStorage.getItem("vault");
 
   if (!storedData) {
